@@ -1,7 +1,9 @@
 // Mock implementation of the data API (same method names/shapes as ../api.js).
 // lecoder: this file is the executable spec for search/filter semantics. Replace with the real service-worker handlers.
+// Folders: items carry folderId, getItems/getFacets/exportItems take a folderId filter, plus the folder methods (./mock-folders.js; ?folders=demo seeds some).
 // Scenarios via URL: ?snippet=null|empty|blank (first 3 items get no usable snippet) ?count=243 &plan=free|pro &cap=300 &pending=0 &sync=idle|syncing|error|needs-login
 import { buildExport } from '../export-format.js';
+import { createMockFolders } from './mock-folders.js';
 import { SEED, FILLER_SUBS, FILLER_TOPICS, FILLER_FORMS, FILLER_AUTHORS, FILLER_TAGS } from './sample-data.js';
 
 const DAY = 86_400_000;
@@ -64,12 +66,19 @@ export function createMock(params) {
   const noSnippet = kind !== null && Object.hasOwn(SNIPPETS, kind) ? SNIPPETS[kind] : undefined;
   if (noSnippet !== undefined) for (const i of items.slice(0, 3)) i.snippet = noSnippet; // regression scenario: cards must omit the snippet line
   const state = { items, plan };
+  const folders = createMockFolders(params, async () => state.items); // in-memory; ?folders=demo seeds a few
+  /** Items as the contract returns them: a copy carrying folderId (string|null). */
+  const withFolders = async (list = state.items) => {
+    const assigned = await folders.assignments();
+    return list.map((i) => ({ ...i, folderId: assigned.get(i.id) ?? null }));
+  };
   const lastSyncAt = Date.now() - 4 * 60_000;
 
   const matches = (i, p) => {
     if (p.type && p.type !== 'all' && i.type !== p.type) return false;
     if (p.subreddits?.length && !p.subreddits.includes(i.subreddit)) return false;
     if (p.tags?.length && !p.tags.every((t) => i.tags.includes(t))) return false;
+    if (p.folderId != null && (p.folderId === 'none' ? i.folderId !== null : i.folderId !== p.folderId)) return false;
     if (p.from != null && i.savedAt < p.from) return false;
     if (p.to != null && i.savedAt > p.to) return false;
     if (p.query?.trim()) {
@@ -103,14 +112,15 @@ export function createMock(params) {
 
   return {
     async getItems(p = {}) {
-      const all = state.items.filter((i) => matches(i, p)).sort(sorters[p.sort ?? 'saved-desc']);
+      const all = (await withFolders()).filter((i) => matches(i, p)).sort(sorters[p.sort ?? 'saved-desc']);
       const start = p.offset ?? 0;
       const end = p.limit == null ? undefined : start + p.limit;
       return { items: all.slice(start, end), matched: all.length, total: state.items.length };
     },
     async getFacets(p = {}) {
       // Facet counts ignore the facet's own filter so users can broaden a selection.
-      const base = (omit) => state.items.filter((i) => matches(i, { ...p, [omit]: undefined }));
+      const withF = await withFolders();
+      const base = (omit) => withF.filter((i) => matches(i, { ...p, [omit]: undefined }));
       return {
         subreddits: tally(base('subreddits'), (i) => [i.subreddit]),
         tags: tally(base('tags'), (i) => i.tags),
@@ -130,9 +140,14 @@ export function createMock(params) {
       return item?.tags ?? [];
     },
     async exportItems(p = {}, format = 'json') {
-      const items = state.items.filter((i) => matches(i, p)).sort(sorters['saved-desc']);
-      return buildExport(items, format);
+      const items = (await withFolders()).filter((i) => matches(i, p)).sort(sorters['saved-desc']);
+      return buildExport(items.map(({ folderId, ...rest }) => rest), format);
     },
+    listFolders: () => folders.list(),
+    createFolder: (name) => folders.create(name),
+    renameFolder: (id, name) => folders.rename(id, name),
+    deleteFolder: (id) => folders.remove(id),
+    moveToFolder: (ids, folderId = null) => folders.move(ids, folderId),
     async getPlan() { return planInfo(); },
     async upgrade() { state.plan = 'pro'; return { opened: true, mock: true }; },
     async getSyncStatus() {

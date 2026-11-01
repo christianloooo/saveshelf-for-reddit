@@ -102,7 +102,7 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 * Reddit only serves ~1,000 saved items; older ones can't be imported by any method.
 * `savedAt` is when we first saw an item (Reddit doesn't expose the true saved time). Items backfilled after upgrading are ordered by Reddit's order but dated at backfill time.
 * The sync worker can be interrupted if Chrome kills the service worker mid-sync; progress is persisted and the next sync resumes incrementally.
-* Folders are in the library UI but not yet in the UI↔service-worker contract: `ui/api.js` layers them on the data API client-side (folder-scoped queries load all matches), and there is no bulk "move" yet (the library has no multi-select). No settings UI in the contract beyond the minimal options page.
+* Folders are part of the UI↔service-worker contract (`folderId` on items and filters, five folder methods); there is no bulk "move" yet (the library has no multi-select). No settings UI in the contract beyond the minimal options page.
 * Opt-in analytics undercounts installs; conversions are only counted for opted-in users.
 * The vendored `ui/api.js` has a dynamic `import('./mock/mock-backend.js')` that only runs outside the extension; the mock is excluded from the package so it is dead code there.
 * `ui/library.js` `renderCard` passes a `null` child to `li.append()`, which renders the text "null" when a card has no snippet. Worked around server-side (link posts get their URL as the snippet) but the UI should filter nulls.

@@ -3,6 +3,7 @@
 // maps that to these handlers via registerUiRpc(handlers) from ui/sw-bridge.js.
 //
 //   getItems getFacets addTag removeTag exportItems getPlan upgrade getSyncStatus syncNow
+//   listFolders createFolder renameFolder deleteFolder moveToFolder
 //
 // Pure of chrome.*: all I/O goes through injected deps so the same code is tested in node against
 // fake-indexeddb, side by side with the UI's stand-in backend (tests/ui-contract.test.js).
@@ -44,6 +45,7 @@ export function toUiItem(it) {
     savedAt,
     createdAt: it.createdAt ?? 0,
     tags: [...(it.tags ?? [])],
+    folderId: it.folderId ?? null, // id of the folder it is filed in, or null
   };
 }
 
@@ -61,6 +63,7 @@ function matcher(p) {
     if (p.type && p.type !== 'all' && i.type !== p.type) return false;
     if (subs && !subs.has(i.subreddit)) return false;
     if (p.tags?.length && !p.tags.every((t) => i.tags.includes(t))) return false;
+    if (p.folderId != null && (p.folderId === 'none' ? i.folderId !== null : i.folderId !== p.folderId)) return false;
     if (p.from != null && i.savedAt < p.from) return false;
     if (p.to != null && i.savedAt > p.to) return false;
     if (words.length && !words.every((w) => i._hay.includes(w))) return false;
@@ -164,7 +167,34 @@ export function createUiHandlers(getDeps, { notifyChanged = () => {} } = {}) {
     async exportItems(p = {}, format = 'json') {
       const all = await load();
       const hits = all.filter(matcher(p)).sort(SORTERS['saved-desc']);
-      return buildExport(hits, format === 'csv' ? 'csv' : 'json');
+      // the export file format is unchanged: folderId is an opaque id, folders travel in the options-page backup
+      return buildExport(hits.map(({ folderId, ...rest }) => rest), format === 'csv' ? 'csv' : 'json');
+    },
+
+    // ---- folders ------------------------------------------------------------------------------
+    // Errors are LibraryError with readable messages (empty / duplicate name, unknown folder); the bridge relays them.
+    async listFolders() {
+      return (await getDeps()).store.listFolders();
+    },
+    async createFolder(name) {
+      const f = await (await getDeps()).store.createFolder(name);
+      notifyChanged('folders');
+      return f;
+    },
+    async renameFolder(id, name) {
+      const f = await (await getDeps()).store.renameFolder(id, name);
+      notifyChanged('folders');
+      return f;
+    },
+    /** Deleting a folder never deletes its items; they become un-filed. */
+    async deleteFolder(id) {
+      await (await getDeps()).store.deleteFolder(id);
+      notifyChanged('folders');
+    },
+    /** folderId = null takes the items out of any folder. */
+    async moveToFolder(ids, folderId = null) {
+      await (await getDeps()).store.moveToFolder(ids, folderId);
+      notifyChanged('folders');
     },
 
     async getPlan() {

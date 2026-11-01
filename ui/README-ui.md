@@ -20,7 +20,8 @@ Works with `prefers-color-scheme` dark mode, keyboard-accessible, native `<dialo
 2. Service worker (module): 
    ```js
    import { registerUiRpc, notifyChanged } from './ui/sw-bridge.js';
-   registerUiRpc({ getItems, getFacets, addTag, removeTag, exportItems, getPlan, upgrade, getSyncStatus, syncNow });
+   registerUiRpc({ getItems, getFacets, addTag, removeTag, exportItems, getPlan, upgrade, getSyncStatus, syncNow,
+                   listFolders, createFolder, renameFolder, deleteFolder, moveToFolder });
    // call notifyChanged() after a sync finishes, a plan change, or any item write
    ```
 3. Message shape (already handled by `api.js` and `sw-bridge.js`):
@@ -44,20 +45,29 @@ type Item = {
   savedAt: number;       // epoch ms when the user saved it (or when we first saw it)
   createdAt: number;     // epoch ms of the post/comment
   tags: string[];        // lowercase, hyphenated, <= 32 chars
+  folderId: string | null; // id of the folder the save is filed in, null = un-filed
 };
+
+type Folder = { id: string; name: string; createdAt: number; count: number };  // count = saves filed in it
 ```
 
 ## API (all async; see `api.js`)
 | Method | Args → Result |
 |---|---|
-| `getItems(params)` | `{query?, type?:'all'\|'post'\|'comment', subreddits?:string[], tags?:string[] (AND), from?:ms, to?:ms, sort?:'saved-desc'\|'saved-asc'\|'score-desc'\|'posted-desc', offset?, limit?}` → `{items, matched, total}` |
+| `getItems(params)` | `{query?, type?:'all'\|'post'\|'comment', subreddits?:string[], tags?:string[] (AND), folderId?:string\|'none', from?:ms, to?:ms, sort?:'saved-desc'\|'saved-asc'\|'score-desc'\|'posted-desc', offset?, limit?}` → `{items, matched, total}` |
 | `getFacets(params)` | same filter params → `{subreddits:[{name,count}], tags:[{name,count}], allTags:string[], types:{post,comment}}`. Each facet's counts ignore *that facet's own* filter (so users can broaden). `allTags` = every tag, unfiltered |
 | `addTag(id, tag)` / `removeTag(id, tag)` | → the item's updated `tags[]`. Normalise on add: trim, lowercase, spaces→`-`, max 32 |
+| `listFolders()` | → `Folder[]` (with `count`) |
+| `createFolder(name)` / `renameFolder(id, name)` | → the `Folder`. Trim + collapse whitespace, ≤60 chars. Reject (readable `Error.message`) for an empty name, a duplicate name (case-insensitive) or, for rename, an unknown id |
+| `deleteFolder(id)` | → void. **Never deletes saves**: they become un-filed |
+| `moveToFolder(ids, folderId\|null)` | → void. `null` takes the saves out of any folder. Rejects for an unknown folder id |
 | `exportItems(params, 'json'\|'csv')` | → `{filename, mime, content}` for items matching the filter params (UI turns it into a download). Use `buildExport` |
 | `getPlan()` | → `{plan:'free'\|'pro', cap:300\|null, count, pending, limitReached, priceLabel}`. `pending` = saves found on Reddit but **not stored** because of the cap (drives the banner copy; use 0 if unknown) |
 | `upgrade()` | open the checkout page (ExtensionPay). UI re-reads `getPlan()` after the modal closes; also call `notifyChanged()` when the paid status flips |
 | `getSyncStatus()` | → `{state:'idle'\|'syncing'\|'error'\|'needs-login', lastSyncAt, added, progress:{done,total}\|null, message?}` |
 | `syncNow()` | trigger a sync; resolves with the new sync status |
+
+`folderId` filter (getItems / getFacets / exportItems): a folder id keeps only saves filed there, `'none'` only un-filed saves, absent = everything; an unknown id matches nothing. It is applied *with* the other filters, before paging, and facets are counted inside the folder (the folder is not a facet, so it never broadens). `total` in `getItems` stays the size of the whole library. The export file format is unchanged (`folderId` is not written; folders travel in the options-page backup). Folder methods call `notifyChanged('folders')`; `api.js` drops that broadcast on the page that made the edit.
 
 Search semantics (mock = reference): case-insensitive; every whitespace-separated word must appear in
 title / snippet / subreddit / author / tags (AND). Sorting by `saved-desc` is the default. `getItems` is paged by `offset`/`limit` (UI uses 40).
@@ -72,7 +82,5 @@ title / snippet / subreddit / author / tags (AND). Sorting by `saved-desc` is th
 `node tools/e2e.mjs` (UI behaviour against the mock), `rpc-test.mjs` (api.js ↔ runtime-messaging path with a stubbed `chrome`),
 `screenshots.mjs` (CWS screenshots), `build-landing.mjs` (landing from `landing.src.html`). They need `npm i` in `tools/` and a static server on :8765.
 
-## Folders (UI-side layer)
-
-The UI↔service-worker contract above has no folder methods. `ui/api.js` adds them on top, using the existing rich data API (`api.folders.*`, `api.library.search`) from the page itself:
-`listFolders`, `createFolder`, `renameFolder`, `deleteFolder`, `moveToFolder(ids, folderId|null)`, plus a `folderId` param (`'none'` = un-filed) on `getItems`/`getFacets`/`exportItems` and a `folderId` on returned items. In dev, `ui/mock/mock-folders.js` stands in (`?folders=demo` seeds a few). If the backend later adds these natively, delete the layer in `ui/api.js` and keep the same signatures.
+## Folders
+Folders are part of the contract above (items carry `folderId`, the three read methods filter by it, five folder methods) and `ui/api.js` just forwards them; there is no client-side folder logic. In dev, `ui/mock/mock-backend.js` implements them in memory via `ui/mock/mock-folders.js` (`?folders=demo` seeds a few). The same assertions run against the mock and the real handlers in `tests/ui-contract.test.js`.

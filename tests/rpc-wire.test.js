@@ -60,4 +60,28 @@ describe('UI <-> service worker RPC', () => {
     await ui.addTag((await ui.getRecent(1))[0].id, 'ping');
     expect(broadcasts.some((b) => b.ns === 'saveshelf' && b.event === 'changed')).toBe(true);
   });
+
+  it('folders go over the same bus: errors are readable, edits broadcast, own broadcast is not echoed to the page', async () => {
+    const f = await ui.createFolder('Wire');
+    await expect(ui.createFolder('wire')).rejects.toThrow(/already exists/);
+    const [item] = (await ui.getItems({ limit: 1 })).items;
+    await ui.moveToFolder([item.id], f.id);
+    expect((await ui.getItems({ folderId: f.id })).items.map((i) => i.id)).toEqual([item.id]);
+    expect((await ui.listFolders()).find((x) => x.id === f.id).count).toBe(1);
+    expect(broadcasts.filter((b) => b.reason === 'folders').length).toBeGreaterThanOrEqual(2);
+
+    // onChange: a folders broadcast right after this page's own edit is swallowed, other pages' edits and other reasons are not
+    const seen = [];
+    const off = ui.onChange((m) => seen.push(m.reason));
+    const fire = (reason) => listeners.forEach((l) => l({ ns: 'saveshelf', event: 'changed', reason }));
+    await ui.renameFolder(f.id, 'Wire 2');
+    fire('folders');
+    fire('sync');
+    await new Promise((r) => setTimeout(r, 1100));
+    fire('folders'); // another page's edit, well after ours
+    off();
+    expect(seen).toEqual(['sync', 'folders']);
+    await ui.deleteFolder(f.id);
+    expect((await ui.getItems({ folderId: 'none' })).matched).toBe(150);
+  });
 });

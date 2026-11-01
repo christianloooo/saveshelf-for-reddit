@@ -6,7 +6,7 @@ import { makeEnv } from './helpers/env.js';
 import { makeChildren } from './helpers/fixtures.js';
 import { createUiHandlers } from '../src/lib/ui-rpc.js';
 
-const ITEM_KEYS = ['author', 'createdAt', 'id', 'numComments', 'score', 'savedAt', 'snippet', 'subreddit', 'tags', 'title', 'type', 'url'].sort();
+const ITEM_KEYS = ['author', 'createdAt', 'folderId', 'id', 'numComments', 'score', 'savedAt', 'snippet', 'subreddit', 'tags', 'title', 'type', 'url'].sort();
 
 const backends = {
   mock: {
@@ -172,6 +172,76 @@ describe.each(Object.keys(backends))('UI contract: %s', (name) => {
     expect(csv.content.split('\r\n').length).toBeGreaterThanOrEqual(121);
   });
 
+  it('folders: items carry folderId; list/create/rename/move/delete; folderId filter on getItems, getFacets, exportItems', async () => {
+    const { h } = await make();
+    expect(await h.listFolders()).toEqual([]);
+    expect((await h.getItems({ limit: 5 })).items.every((i) => i.folderId === null)).toBe(true);
+
+    const a = await h.createFolder('  Dev   reading ');
+    expect(Object.keys(a).sort()).toEqual(expect.arrayContaining(['createdAt', 'id', 'name']));
+    expect(a.name).toBe('Dev reading');
+    await expect(h.createFolder('dev reading')).rejects.toThrow(/already exists/);
+    await expect(h.createFolder('   ')).rejects.toThrow(/empty/);
+    const b = await h.createFolder('Later');
+
+    const all = (await h.getItems({})).items;
+    const [i0, i1, i2] = all;
+    await h.moveToFolder([i0.id, i1.id], a.id);
+    await h.moveToFolder([i2.id], b.id);
+    await expect(h.moveToFolder([i0.id], 'f_nope')).rejects.toThrow(/not found/i);
+
+    const lst = await h.listFolders();
+    expect(lst.find((f) => f.id === a.id).count).toBe(2);
+    expect(lst.find((f) => f.id === b.id).count).toBe(1);
+
+    // item key + filter semantics
+    const inA = await h.getItems({ folderId: a.id });
+    expect(inA.items.map((i) => i.id).sort()).toEqual([i0.id, i1.id].sort());
+    expect(inA.items.every((i) => i.folderId === a.id)).toBe(true);
+    expect(inA.matched).toBe(2);
+    expect(inA.total).toBe(120); // total stays the whole library
+    const none = await h.getItems({ folderId: 'none' });
+    expect(none.matched).toBe(117);
+    expect(none.items.every((i) => i.folderId === null)).toBe(true);
+    expect((await h.getItems({ folderId: 'f_unknown' })).matched).toBe(0);
+    expect((await h.getItems({})).items.find((i) => i.id === i2.id).folderId).toBe(b.id);
+    // paging happens after the folder filter
+    const page = await h.getItems({ folderId: a.id, limit: 1, offset: 1 });
+    expect(page.items).toHaveLength(1);
+    expect(page.matched).toBe(2);
+    // combines with other filters
+    expect((await h.getItems({ folderId: a.id, query: i0.title })).items.map((i) => i.id)).toContain(i0.id);
+    expect((await h.getItems({ folderId: b.id, query: i0.title })).items.map((i) => i.id)).not.toContain(i0.id);
+
+    // facets are computed inside the folder; allTags stays global
+    const fa = await h.getFacets({ folderId: a.id });
+    expect(fa.subreddits.reduce((n, s) => n + s.count, 0)).toBe(2);
+    expect(fa.types.post + fa.types.comment).toBe(2);
+    expect(fa.allTags).toEqual((await h.getFacets({})).allTags);
+    expect((await h.getFacets({ folderId: 'none' })).types.post + (await h.getFacets({ folderId: 'none' })).types.comment).toBe(117);
+
+    // export honours the folder and keeps the export format (no folderId column)
+    const ex = JSON.parse((await h.exportItems({ folderId: a.id }, 'json')).content);
+    expect(ex.count).toBe(2);
+    expect(ex.items.map((i) => i.id).sort()).toEqual([i0.id, i1.id].sort());
+    expect(ex.items[0]).not.toHaveProperty('folderId');
+    const csv = await h.exportItems({ folderId: 'none' }, 'csv');
+    expect(csv.content.split('\r\n').filter(Boolean)).toHaveLength(118);
+
+    // move out, rename, delete (items survive, un-filed)
+    await h.moveToFolder([i1.id], null);
+    expect((await h.getItems({ folderId: a.id })).matched).toBe(1);
+    const renamed = await h.renameFolder(a.id, 'Dev');
+    expect(renamed.name).toBe('Dev');
+    await expect(h.renameFolder(a.id, 'later')).rejects.toThrow(/already exists/);
+    await expect(h.renameFolder('f_nope', 'x')).rejects.toThrow(/not found/i);
+    await h.deleteFolder(a.id);
+    expect((await h.listFolders()).map((f) => f.id)).toEqual([b.id]);
+    expect((await h.getItems({ folderId: 'none' })).matched).toBe(119);
+    expect((await h.getItems({})).total).toBe(120);
+    expect((await h.getItems({})).items.find((i) => i.id === i0.id).folderId).toBeNull();
+  });
+
   it('getPlan: free tier at 120 items', async () => {
     const { h } = await make();
     const p = await h.getPlan();
@@ -286,6 +356,6 @@ describe('real backend specifics', () => {
     expect(Object.keys(r.items[0])).not.toEqual(expect.arrayContaining(['seq']));
     expect(JSON.parse(JSON.stringify(r.items[0]))).not.toHaveProperty('_hay');
     expect(JSON.parse(JSON.stringify(r.items[0]))).not.toHaveProperty('_seq');
-    expect(JSON.parse(JSON.stringify(r.items[0]))).not.toHaveProperty('folderId');
+    expect(JSON.parse(JSON.stringify(r.items[0]))).toHaveProperty('folderId', null);
   });
 });
