@@ -55,7 +55,7 @@ await p.setContent(`<!doctype html><meta charset="utf-8"><style>
 @font-face{font-family:Inter;src:url(data:font/woff2;base64,${font}) format('woff2');font-weight:100 900}
 *{box-sizing:border-box}
 body{margin:0;width:440px;height:280px;overflow:hidden;font-family:Inter,sans-serif;color:#1c1917;
-  background:radial-gradient(340px 240px at 100% 0,#ffd9c6 0,transparent 70%),#fafaf9;display:flex;flex-direction:column;justify-content:center;padding:0 30px}
+  background:#fafaf9;display:flex;flex-direction:column;justify-content:center;padding:0 30px}
 .row{display:flex;align-items:center;gap:16px}
 img{width:76px;height:76px;border-radius:18px;box-shadow:0 10px 24px -8px rgba(217,66,11,.55)}
 h1{margin:0;font-size:44px;line-height:1;letter-spacing:-.035em;font-weight:800}

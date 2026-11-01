@@ -17,12 +17,12 @@ const settle = (p) => p.waitForTimeout(500);
 
 // 1. Search
 let p = await page();
-await p.goto(U + '?count=243&q=keyboard'); await p.waitForSelector('.card'); await settle(p);
+await p.goto(U + '?count=243&folders=demo&q=keyboard'); await p.waitForSelector('.card'); await settle(p);
 await p.screenshot({ path: OUT + '1-search-your-saves.png' });
 
 // 2. Filters + tags
 p = await page();
-await p.goto(U + '?count=243'); await p.waitForSelector('.card');
+await p.goto(U + '?count=243&folders=demo'); await p.waitForSelector('.card');
 await p.locator('#tag-filters .tag-toggle', { hasText: 'read-later' }).click();
 await p.selectOption('#date-preset', '365'); await settle(p);
 await p.locator('#subs label', { hasText: 'r/programming' }).click().catch(()=>{});
@@ -36,7 +36,7 @@ await p.screenshot({ path: OUT + '3-toolbar-popup.png' });
 
 // 4. Export menu (dark)
 p = await page('dark');
-await p.goto(U + '?count=243'); await p.waitForSelector('.card');
+await p.goto(U + '?count=243&folders=demo'); await p.waitForSelector('.card');
 await p.locator('#tag-filters .tag-toggle', { hasText: 'hardware' }).click(); await settle(p);
 await p.locator('#export-btn').click(); await settle(p);
 await p.screenshot({ path: OUT + '4-export-json-csv-dark.png' });
