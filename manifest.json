@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "SaveShelf for Reddit",
+  "short_name": "SaveShelf",
+  "version": "0.1.0",
+  "description": "Search, tag and export your Reddit saved posts and comments. Everything stays on your device, beyond Reddit's 1,000-save limit.",
+  "minimum_chrome_version": "135",
+  "icons": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
+  "action": {
+    "default_title": "SaveShelf for Reddit",
+    "default_popup": "ui/popup.html",
+    "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png" }
+  },
+  "options_ui": { "page": "options/options.html", "open_in_tab": true },
+  "background": { "service_worker": "src/background.js", "type": "module" },
+  "permissions": ["storage", "alarms"],
+  "host_permissions": ["https://www.reddit.com/*"],
+  "content_scripts": [
+    { "matches": ["https://extensionpay.com/*"], "js": ["src/vendor/ExtPay.js"], "run_at": "document_start" }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'none'"
+  }
+}

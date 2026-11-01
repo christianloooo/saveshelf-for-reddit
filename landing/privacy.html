@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy – SaveShelf for Reddit</title>
+  <meta name="description" content="Privacy policy for SaveShelf for Reddit: your saved posts and comments stay on your device. No server receives them, and nothing is sold or shared.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="preload" href="fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="index.html"><img src="assets/logo.png" width="28" height="28" alt=""> <span>SaveShelf</span></a>
+      <a class="btn btn-sm" href="index.html">Back to home</a>
+    </div>
+  </header>
+
+  <main id="main" class="wrap narrow doc">
+    <p class="eyebrow">Legal</p>
+    <h1>Privacy Policy</h1>
+    <p class="meta">SaveShelf for Reddit · Last updated 2026-11-01</p>
+
+    <p class="callout"><b>Short version:</b> your saved posts and comments stay on your device. We do not run a server that receives them, we cannot see them, and we never sell or share data.</p>
+
+    <h2 id="data">What the extension does with your data</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Data</th><th scope="col">Where it goes</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Your Reddit saved posts and comments (title, text, subreddit, author, link, score, dates)</th>
+            <td>Read from reddit.com using <b>your own logged-in browser session</b>, then stored <b>only in this browser</b> (IndexedDB). Never uploaded anywhere.</td>
+            <td>So you can search, tag and export them.</td>
+          </tr>
+          <tr>
+            <th scope="row">Your tags and folders</th>
+            <td>Stored only in this browser.</td>
+            <td>Organisation.</td>
+          </tr>
+          <tr>
+            <th scope="row">Settings (auto-sync on/off, interval, analytics choice)</th>
+            <td><code>chrome.storage.local</code>, this browser only.</td>
+            <td>Remember your preferences.</td>
+          </tr>
+          <tr>
+            <th scope="row">Your Reddit username</th>
+            <td>Held only to build the request URL for <em>your own</em> saved list. Not sent anywhere except reddit.com.</td>
+            <td>Reddit’s saved list lives at <code>/user/&lt;you&gt;/saved</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The extension only reads <b>your own</b> saved items. It does not read, collect or store other people’s profiles, and it does not read any page you are browsing (there is no content script).</p>
+
+    <h2 id="network">Network requests</h2>
+    <ul>
+      <li><b>reddit.com</b> (<code>https://www.reddit.com/*</code>): <code>GET /api/me.json</code> and <code>GET /user/&lt;you&gt;/saved.json</code>, sequentially, with delays, honouring Reddit’s rate-limit headers.</li>
+      <li><b>ExtensionPay</b> (only when Pro payments are enabled in the published build): checks whether your one-time purchase is active. ExtensionPay (and its payment processor, Stripe) handle your email and card details; the extension never sees card data. See extensionpay.com and stripe.com for their policies.</li>
+      <li><b>Anonymous usage statistics</b> (optional, <b>off by default</b>): see below.</li>
+    </ul>
+    <p>No other network requests are made. No remote code is loaded.</p>
+
+    <h2 id="stats">Anonymous usage statistics (opt-in)</h2>
+    <p>If, and only if, you tick the box in Settings, the extension sends up to three kinds of event to the publisher’s endpoint: <code>install</code>, <code>active</code> (at most once per day) and <code>conversion</code> (when you buy Pro). Each contains exactly:</p>
+    <pre><code>{ "event": "active", "anonId": "&lt;random UUID&gt;", "v": "0.1.0", "tier": "free", "day": "2026-11-01" }</code></pre>
+    <p><code>anonId</code> is generated when you opt in, is unrelated to your Reddit account or Google account, and is deleted when you opt out. <b>Never sent:</b> Reddit username, saved content, subreddits, tags, folder names, counts of items, search terms, URLs. The settings page shows this exact payload. The collector must not log IP addresses (publisher’s obligation; see README). Because it is opt-in, the figures undercount real usage.</p>
+
+    <h2 id="retention">Retention and deletion</h2>
+    <p>Everything lives in your browser until you delete it. Settings → “Delete my whole local library” erases items, tags and folders; uninstalling the extension removes all of its stored data. Deleting an item here does not delete it on Reddit.</p>
+
+    <h2 id="children">Children</h2>
+    <p>The extension is not directed to children under 13.</p>
+
+    <h2 id="changes">Changes</h2>
+    <p>Material changes will be described in the extension’s release notes and this page.</p>
+
+    <h2 id="contact">Contact</h2>
+    <p>Questions or deletion requests: <b>[PLACEHOLDER: replace with the real contact email before publishing: contact@example.com]</b></p>
+    <p class="note">The extension keeps nothing on a server, so there is nothing for us to delete remotely; this address is for questions and for the opt-in statistics, if you enabled them.</p>
+
+    <p class="note">Not affiliated with, endorsed by, or sponsored by Reddit, Inc. “Reddit” is a trademark of Reddit, Inc.</p>
+  </main>
+
+  <footer class="wrap foot">
+    <span>© 2026 SaveShelf for Reddit</span>
+    <span>Independent, not affiliated with Reddit, Inc.</span>
+    <a href="privacy.html" aria-current="page">Privacy</a>
+  </footer>
+</body>
+</html>

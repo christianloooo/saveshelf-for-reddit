@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings · SaveShelf</title>
+  <link rel="stylesheet" href="../ui/tokens.css">
+  <link rel="stylesheet" href="options.css">
+  <script type="module" src="options.js"></script>
+</head>
+<body>
+  <!-- Minimal functional settings page (backup/restore, auto-sync, analytics opt-in). Not part of leuifrontend's contract. -->
+  <main>
+    <h1>Settings</h1>
+    <p id="status" role="status" aria-live="polite" class="note"></p>
+
+    <section>
+      <h2>Sync</h2>
+      <label class="row"><input type="checkbox" id="autosync"> Sync automatically in the background</label>
+      <label class="row">Every <input type="number" id="hours" min="1" max="168" step="1"> hours</label>
+      <div class="row"><button class="btn" id="full" type="button">Full re-sync</button>
+        <span class="note">Re-reads everything Reddit still shows (up to ~1,000 saves) instead of stopping at what we already have.</span></div>
+    </section>
+
+    <section>
+      <h2>Backup &amp; restore</h2>
+      <div class="row">
+        <button class="btn" id="backup" type="button">Download full backup (.json)</button>
+        <button class="btn" id="restore-btn" type="button">Restore from backup…</button>
+        <input type="file" id="restore" accept="application/json,.json" hidden>
+      </div>
+      <p class="note">The backup keeps tags and folders. Restoring merges into your library and respects the free limit.</p>
+    </section>
+
+    <section>
+      <h2>Deleted items</h2>
+      <p class="note" id="deleted-note"></p>
+      <button class="btn" id="forget" type="button">Allow deleted items to sync back</button>
+    </section>
+
+    <section>
+      <h2>Anonymous usage stats</h2>
+      <label class="row"><input type="checkbox" id="analytics"> Share anonymous install / daily-active counts</label>
+      <p class="note">Off by default. Never includes your Reddit username, saves, searches or tags. This is exactly what would be sent:</p>
+      <pre id="preview"></pre>
+    </section>
+
+    <section id="testmode" hidden>
+      <h2>Test mode</h2>
+      <p class="note">Payments are stubbed in this build. This switch fakes a Pro license locally. It does not exist in a release build.</p>
+      <label class="row"><input type="checkbox" id="stubpro"> Pro (test)</label>
+    </section>
+
+    <section>
+      <h2>Danger zone</h2>
+      <button class="btn" id="wipe" type="button">Delete my whole local library…</button>
+    </section>
+  </main>
+
+  <dialog id="confirm">
+    <form method="dialog">
+      <h2>Delete everything stored locally?</h2>
+      <p>This removes all saved items, tags and folders from this browser. Your saves on Reddit are not touched. Export a backup first if unsure.</p>
+      <menu><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="ok">Delete</button></menu>
+    </form>
+  </dialog>
+</body>
+</html>

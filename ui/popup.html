@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SaveShelf for Reddit</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="popup.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body>
+  <main class="popup">
+    <header class="top">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"><i data-icon="bookmark" data-size="16"></i></span>
+        <div>
+          <h1>SaveShelf</h1>
+          <div class="sync" id="sync" role="status" aria-live="polite">
+            <span class="dot" id="sync-dot" data-state="idle"></span>
+            <span id="sync-text">Checking…</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-icon" id="sync-btn" type="button" aria-label="Sync now" title="Sync now"><i data-icon="refresh-cw" data-size="16"></i></button>
+    </header>
+
+    <form class="search" id="search-form" role="search">
+      <label class="field">
+        <i data-icon="search" data-size="16"></i>
+        <span class="sr-only">Search your saved posts</span>
+        <input id="q" type="search" placeholder="Search saved posts…" autocomplete="off" spellcheck="false" autofocus>
+      </label>
+    </form>
+
+    <section aria-labelledby="list-title" class="list-wrap">
+      <h2 id="list-title" class="eyebrow">Recent saves</h2>
+      <ul class="list" id="list"></ul>
+      <p class="empty" id="empty" hidden></p>
+    </section>
+
+    <footer class="foot">
+      <div class="usage" id="usage">
+        <div class="usage-row">
+          <span id="usage-text" class="tabular"></span>
+          <a href="#" id="upgrade-link" hidden>Upgrade · $9</a>
+        </div>
+        <div class="meter" id="meter" role="progressbar" aria-label="Free library usage" aria-valuemin="0"><span id="meter-fill"></span></div>
+      </div>
+      <a class="btn btn-primary open" id="open-library" href="library.html" target="_blank" rel="noopener">
+        Open full library <i data-icon="arrow-right" data-size="16"></i>
+      </a>
+    </footer>
+  </main>
+</body>
+</html>

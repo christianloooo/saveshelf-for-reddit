@@ -1,0 +1,48 @@
+{
+  "kind": "Listing",
+  "data": {
+    "after": "t1_cmt001",
+    "dist": 4,
+    "modhash": "",
+    "geo_filter": "",
+    "before": null,
+    "children": [
+      {
+        "kind": "t3",
+        "data": {
+          "name": "t3_abc123", "id": "abc123", "subreddit": "rust", "author": "ferris",
+          "title": "Borrow checker deep dive", "selftext": "", "is_self": false,
+          "url": "https://github.com/example/borrow", "url_overridden_by_dest": "https://github.com/example/borrow",
+          "domain": "github.com", "permalink": "/r/rust/comments/abc123/borrow_checker_deep_dive/",
+          "score": 1234, "num_comments": 56, "created_utc": 1700000000.0, "over_18": false,
+          "link_flair_text": "Article", "removed_by_category": null, "saved": true
+        }
+      },
+      {
+        "kind": "t3",
+        "data": {
+          "name": "t3_def456", "id": "def456", "subreddit": "Cooking", "author": "baker",
+          "title": "Sourdough hydration chart", "selftext": "Here is a hydration chart for beginners...", "is_self": true,
+          "url": "https://www.reddit.com/r/Cooking/comments/def456/sourdough_hydration_chart/",
+          "domain": "self.Cooking", "permalink": "/r/Cooking/comments/def456/sourdough_hydration_chart/",
+          "score": 88, "num_comments": 7, "created_utc": 1699900000.0, "over_18": true,
+          "link_flair_text": null, "removed_by_category": null, "saved": true
+        }
+      },
+      {
+        "kind": "t5",
+        "data": { "name": "t5_2qh1i", "display_name": "AskReddit" }
+      },
+      {
+        "kind": "t1",
+        "data": {
+          "name": "t1_cmt001", "id": "cmt001", "subreddit": "Cooking", "author": "starterfan",
+          "body": "You need to feed it twice a day for the first week.", "link_title": "Best sourdough starter",
+          "link_permalink": "https://www.reddit.com/r/Cooking/comments/zzz999/best_sourdough_starter/",
+          "permalink": "/r/Cooking/comments/zzz999/best_sourdough_starter/cmt001/", "score": 42,
+          "created_utc": 1699800000.0, "over_18": false, "saved": true
+        }
+      }
+    ]
+  }
+}

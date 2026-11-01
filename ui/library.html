@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Library · SaveShelf</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="library.css">
+  <script type="module" src="library.js"></script>
+</head>
+<body>
+  <header class="app-bar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><i data-icon="bookmark" data-size="18"></i></span>
+      <h1>SaveShelf</h1>
+      <span class="chip badge-pro" id="pro-chip" hidden><i data-icon="badge-check" data-size="13"></i> Pro</span>
+    </div>
+    <div class="bar-right">
+      <div class="sync" id="sync" role="status" aria-live="polite">
+        <span class="dot" id="sync-dot" data-state="idle"></span>
+        <span id="sync-text">Checking…</span>
+        <button class="btn btn-ghost btn-icon" id="sync-btn" type="button" aria-label="Sync now" title="Sync now"><i data-icon="refresh-cw" data-size="15"></i></button>
+      </div>
+      <button class="btn" id="export-btn" type="button" popovertarget="export-menu"><i data-icon="download" data-size="16"></i> Export</button>
+      <button class="btn btn-primary" id="upgrade-btn" type="button" command="show-modal" commandfor="upsell"><i data-icon="sparkles" data-size="16"></i> Upgrade to Pro</button>
+    </div>
+  </header>
+
+  <div id="export-menu" popover class="menu">
+    <p class="menu-note" id="export-note"></p>
+    <button type="button" class="menu-item" data-format="json"><i data-icon="file-json" data-size="18"></i><span><b>JSON</b><small>Full data with tags</small></span></button>
+    <button type="button" class="menu-item" data-format="csv"><i data-icon="file-spreadsheet" data-size="18"></i><span><b>CSV</b><small>Opens in Excel or Sheets</small></span></button>
+  </div>
+
+  <div id="move-menu" popover class="menu move-menu" role="menu" aria-label="Move to folder"></div>
+
+  <div class="layout">
+    <aside class="filters" aria-label="Filters">
+      <section class="folders" aria-labelledby="folders-h">
+        <div class="section-head">
+          <h2 id="folders-h">Folders</h2>
+          <button class="btn btn-ghost btn-icon btn-xs" id="folder-add" type="button" aria-label="New folder" title="New folder"><i data-icon="folder-plus" data-size="16"></i></button>
+        </div>
+        <ul class="folder-list" id="folder-list"></ul>
+      </section>
+      <section>
+        <h2>Type</h2>
+        <div class="seg" role="radiogroup" aria-label="Type" id="type-seg"></div>
+      </section>
+      <section>
+        <h2>Saved</h2>
+        <select class="select" id="date-preset" aria-label="Saved date range">
+          <option value="any">Any time</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="custom">Custom range…</option>
+        </select>
+        <div class="range" id="date-custom" hidden>
+          <label>From <input type="date" id="date-from"></label>
+          <label>To <input type="date" id="date-to"></label>
+        </div>
+      </section>
+      <section>
+        <h2>Subreddit</h2>
+        <label class="field field-sm">
+          <i data-icon="list-filter" data-size="14"></i>
+          <span class="sr-only">Filter subreddit list</span>
+          <input id="sub-filter" type="search" placeholder="Find subreddit" autocomplete="off">
+        </label>
+        <ul class="checks" id="subs"></ul>
+        <button class="link-btn" id="subs-more" type="button" hidden></button>
+      </section>
+      <section>
+        <h2>Tags</h2>
+        <div class="tag-cloud" id="tag-filters"></div>
+        <p class="hint" id="tag-hint"></p>
+      </section>
+      <button class="btn btn-sm" id="clear" type="button" hidden>Clear all filters</button>
+    </aside>
+
+    <main class="results">
+      <div id="cap-banner" class="banner" hidden></div>
+
+      <div class="toolbar">
+        <label class="field search-field">
+          <i data-icon="search" data-size="18"></i>
+          <span class="sr-only">Search your saves</span>
+          <input id="q" type="search" placeholder="Search titles, text, subreddits, authors and tags" autocomplete="off" spellcheck="false">
+          <kbd>/</kbd>
+        </label>
+        <label class="sort">
+          <span class="sr-only">Sort by</span>
+          <select class="select" id="sort">
+            <option value="saved-desc">Recently saved</option>
+            <option value="saved-asc">Oldest saved</option>
+            <option value="score-desc">Top score</option>
+            <option value="posted-desc">Newest posts</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="summary">
+        <p id="summary" role="status" aria-live="polite"></p>
+        <div class="active" id="active-filters"></div>
+      </div>
+
+      <ul class="cards" id="cards"></ul>
+      <div class="more"><button class="btn" id="more" type="button" hidden>Show more</button></div>
+      <div class="empty" id="empty" hidden></div>
+    </main>
+  </div>
+
+  <dialog id="folder-delete" aria-labelledby="folder-delete-title" closedby="any">
+    <form method="dialog" class="confirm">
+      <h2 id="folder-delete-title">Delete this folder?</h2>
+      <p class="lead" id="folder-delete-body"></p>
+      <div class="actions">
+        <button class="btn btn-lg" value="cancel" autofocus>Cancel</button>
+        <button class="btn btn-lg btn-danger" value="delete">Delete folder</button>
+      </div>
+    </form>
+  </dialog>
+
+  <p class="toast" id="toast" role="status" aria-live="polite"></p>
+
+  <dialog id="upsell" aria-labelledby="upsell-title" closedby="any">
+    <form method="dialog" class="upsell">
+      <button class="btn btn-ghost btn-icon close" value="cancel" aria-label="Close"><i data-icon="x" data-size="18"></i></button>
+      <span class="upsell-icon" aria-hidden="true"><i data-icon="infinity" data-size="24"></i></span>
+      <h2 id="upsell-title">Keep every save, not just the last 1,000</h2>
+      <p class="lead" id="upsell-lead"></p>
+      <ul class="perks">
+        <li><i data-icon="check" data-size="16"></i> Unlimited saved posts and comments</li>
+        <li><i data-icon="check" data-size="16"></i> Keeps old saves even after Reddit drops them</li>
+        <li><i data-icon="check" data-size="16"></i> Everything stays on this device. No SaveShelf account needed</li>
+        <li><i data-icon="check" data-size="16"></i> Free updates, no subscription</li>
+      </ul>
+      <div class="price"><span class="amount">$9</span><span class="once">one-time payment</span></div>
+      <div class="actions">
+        <button class="btn btn-primary btn-lg" value="upgrade" autofocus>Unlock Pro for $9</button>
+        <button class="btn btn-lg" value="cancel">Not now</button>
+      </div>
+      <p class="fine">Your 300 free saves and exports stay yours either way.</p>
+    </form>
+  </dialog>
+</body>
+</html>
