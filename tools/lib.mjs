@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Shared helpers for the dev tools: repo root, a tiny static server, and the system Chrome path.
 import http from 'node:http';
 import fs from 'node:fs';

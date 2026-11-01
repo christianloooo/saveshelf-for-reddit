@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Serializers for export. Pure functions with no DOM / chrome.* use, so the service worker can import them too.
 
 export function toJSON(items) {

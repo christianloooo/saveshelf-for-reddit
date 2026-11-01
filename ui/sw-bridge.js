@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 /**
  * Service-worker side of the UI contract. lecoder: import this in the service worker and pass your handlers.
  *

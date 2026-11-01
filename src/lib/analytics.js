@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Privacy-safe, opt-in analytics (installs, daily actives, conversions).
 //
 // Guarantees (enforced here and covered by tests):

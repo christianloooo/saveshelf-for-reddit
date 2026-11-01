@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { defineConfig } from 'vitest/config';
 
 // The shipped src/config.js carries the real ExtensionPay id (release build => real license mode). Unit tests exercise the

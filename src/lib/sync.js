@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Sync the logged-in user's OWN saved posts/comments from reddit.com into the local library.
 //
 // Uses only the user's own session: GET /api/me.json (who am I) then

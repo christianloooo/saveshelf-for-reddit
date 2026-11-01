@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // End-to-end over the real message path: ui/api.js -> chrome.runtime.sendMessage -> sw-bridge
 // registerUiRpc -> our handlers. chrome.* is stubbed with a tiny in-process bus.
 import { describe, it, expect, beforeAll } from 'vitest';

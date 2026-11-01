@@ -1,8 +1,10 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // What goes into the store package. Single source of truth for package.mjs, validate and e2e.
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-export const INCLUDE = ['manifest.json', 'src', 'ui', 'options', 'icons', 'PRIVACY.md', 'LICENSE'];
+export const INCLUDE = ['manifest.json', 'src', 'ui', 'options', 'icons', 'PRIVACY.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md'];
 // Never ship: dev mock backend, docs for devs. ui/api.js also has its mock import stripped (see shipContent).
 export const EXCLUDE = [/^ui\/mock\//, /^ui\/README-ui\.md$/, /(^|\/)\.DS_Store$/, /\.test\.js$/];
 

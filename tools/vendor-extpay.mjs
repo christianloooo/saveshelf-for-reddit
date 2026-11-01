@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Vendors the official ExtPay SDK (npm "extpay", pinned in devDependencies) into src/vendor/.
 //   src/vendor/ExtPay.js      byte-identical copy of dist/ExtPay.js. Loaded as the content script on
 //                             https://extensionpay.com/* (that is how onPaid learns a payment finished).

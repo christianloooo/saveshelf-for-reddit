@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { describe, it, expect } from 'vitest';
 import { toCSV, toJSON, parseImport, CSV_COLUMNS } from '../src/lib/export.js';
 import { makeEnv } from './helpers/env.js';

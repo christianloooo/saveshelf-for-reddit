@@ -9,6 +9,12 @@ A local, searchable library of **your own** Reddit saved posts and comments. Red
 
 Status: feature-complete prototype, **unpublished, untested against the live reddit.com**. Nothing has been paid for, registered or submitted.
 
+## License and source
+
+SaveShelf for Reddit is free software under the **GNU Affero General Public License v3.0 or later** (`LICENSE`). Third-party components (the ExtensionPay SDK, `webextension-polyfill`, Lucide icons, Inter) keep their own licenses: `THIRD_PARTY_NOTICES.md`.
+
+Source code: https://github.com/OWNER/saveshelf-for-reddit <!-- SOURCE_REPO_URL: placeholder, replace once the repo exists -->
+
 ## Layout
 
 ```
@@ -68,7 +74,7 @@ Wiring: `src/lib/extpay.js` (service + `onPaid` handler), `src/background.js` (t
 
 **Vendored SDK**: `src/vendor/ExtPay.js` is `dist/ExtPay.js` from the official npm package `extpay@3.1.2` (pinned devDependency), byte for byte; it is the content script. `src/vendor/ExtPay.esm.js` is the same file plus one appended line, `export default ExtPay;`, because the worker is an ES module and cannot `importScripts`. `npm run vendor:extpay` regenerates both and `tests/vendor-extpay.test.js` fails if they drift.
 
-**Licence caveat for the owner**: the SDK is copyleft. Its source header says AGPLv3, its `package.json` says `AGPL-3.0-or-later`, and the package's `LICENSE` file only contains the text `LGPL-3.0`. This repo is MIT. Shipping the SDK inside the extension means the combined work may have to be offered under the AGPL, and the bundled `webextension-polyfill` is MPL-2.0. Get a legal read (or ask ExtensionPay for their position on extension authors) before publishing a real-mode build.
+**Licence**: SaveShelf is free software, **AGPL-3.0-or-later** (`LICENSE`). That matches the vendored ExtPay SDK (in-file comment "AGPLv3 licensed", `package.json` `AGPL-3.0-or-later`; its `LICENSE` file only says `LGPL-3.0`, reproduced in `THIRD_PARTY_NOTICES.md`). The SDK bundles `webextension-polyfill` (MPL-2.0, unmodified, notice in `THIRD_PARTY_NOTICES.md`). Full notices, including Lucide (ISC) and Inter (OFL), are in `THIRD_PARTY_NOTICES.md`; both it and `LICENSE` ship in the store zip.
 
 **Test mode**: ExtensionPay has a test mode per extension; an unpacked (development) install uses it automatically, and the payment page asks for your account password before Stripe Checkout (use Stripe's test cards). See "Manual live test" below.
 
@@ -92,11 +98,11 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 
 ## Before you publish (checklist — each needs the owner's go-ahead)
 
-1. **Payments** (see "Payments / ExtensionPay" below): the extension is registered and `EXTPAY_ID = 'saveshelf-for-reddit'` is set ($9 one-time, plan nickname `pro`). **Still to do: connect Stripe in the ExtensionPay dashboard** (until then live payments cannot complete), and check test-mode checkout first (item 11 of the live test). Resolve the SDK licence question (AGPL, see below).
+1. **Payments** (see "Payments / ExtensionPay" below): the extension is registered and `EXTPAY_ID = 'saveshelf-for-reddit'` is set ($9 one-time, plan nickname `pro`). **Still to do: connect Stripe in the ExtensionPay dashboard** (until then live payments cannot complete), and check test-mode checkout first (item 11 of the live test). 
 2. **Analytics**: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging) and set `ANALYTICS_ENDPOINT`, or leave it empty to ship with no analytics at all. Update `PRIVACY.md` accordingly.
 3. **Name/branding**: "Reddit" in the name is a trademark risk (see `CHROMEWEBSTORE.md`).
 4. **Legal**: read Reddit's current terms/Data API terms before charging for something that reads reddit.com JSON.
-5. Host the privacy policy (`landing/privacy.html` is the web version of `PRIVACY.md`; keep them in sync; contact email is set), replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is MIT (`LICENSE`).
+5. Host the privacy policy (`landing/privacy.html` is the web version of `PRIVACY.md`; keep them in sync; contact email is set), replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is AGPL-3.0-or-later (`LICENSE`, `THIRD_PARTY_NOTICES.md`); the public source repo is https://github.com/OWNER/saveshelf-for-reddit <!-- SOURCE_REPO_URL: placeholder, replace once the repo exists -->.
 6. `npm run build` — with `EXTPAY_ID` set the zip has no `-stub` suffix (`dist/saveshelf-for-reddit-<ver>.zip`). Upload manually.
 
 ## Known gaps / honest caveats

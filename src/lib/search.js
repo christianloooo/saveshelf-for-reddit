@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Full-text search over the library. Pure functions (no IndexedDB, no chrome.*) so they are easy to
 // test and can run in any extension context. The index is built in memory from all items; a library
 // of several thousand items indexes in tens of milliseconds.

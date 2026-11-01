@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { hydrateIcons } from './icons.js';
 import { getRecent, getItems, getPlan, getSyncStatus, syncNow, upgrade, onChange, openLibraryUrl } from './api.js';
 import { h, ic, relTime, fmtNum, highlight, debounce, meterLevel, syncedText } from './util.js';

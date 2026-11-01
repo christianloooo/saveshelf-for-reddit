@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { chromium } from 'playwright-core';
 // UI-only test: drives the real ui/ pages in a browser against the dev mock backend (no extension, no service worker).
 // The real-extension equivalent is scripts/e2e-chrome.mjs. Run: npm run test:ui-mock

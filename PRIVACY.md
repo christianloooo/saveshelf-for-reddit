@@ -47,6 +47,10 @@ The extension is not directed to children under 13.
 
 Material changes will be described in the extension's release notes and this file.
 
+## Source code
+
+SaveShelf is open source under the AGPL-3.0-or-later, so you can check every claim above in the code: https://github.com/OWNER/saveshelf-for-reddit <!-- SOURCE_REPO_URL: placeholder, replace once the repo exists -->
+
 ## Contact
 
 Questions or deletion requests: **christianlo3823@gmail.com**

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Deterministic fixture data in Reddit's real listing format
 // (https://www.reddit.com/user/<name>/saved.json). Newest-saved first, like the real endpoint.
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // ExtensionPay (real license mode). Only used when CONFIG.STUB_LICENSE is false, i.e. EXTPAY_ID is set.
 // The SDK is the official ExtPay 3.1.2, vendored unmodified in src/vendor/ (see README / tools/vendor-extpay.mjs).
 //

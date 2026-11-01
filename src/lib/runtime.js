@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Production wiring: real IndexedDB, chrome.storage, chrome.runtime messaging, BroadcastChannel.
 // Two flavours share one database (same extension origin):
 //   buildPageDeps()   - popup / library pages. Sync is delegated to the service worker.

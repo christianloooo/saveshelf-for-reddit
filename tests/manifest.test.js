@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { describe, it, expect } from 'vitest';
 import { cpSync, mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -52,13 +54,12 @@ describe('manifest + package', () => {
     expect(shipped).not.toMatch(/dev-only/);
     expect(shipped).toMatch(/chrome\.runtime\.sendMessage/);
   });
-  it('is branded SaveShelf for Reddit and ships the MIT license and privacy policy', () => {
+  it('is branded SaveShelf for Reddit and ships the AGPL license, third-party notices and privacy policy', () => {
     const { manifest } = validate(root);
     expect(manifest.name).toBe('SaveShelf for Reddit');
     expect(manifest.short_name).toBe('SaveShelf');
     expect(manifest.action.default_title).toBe('SaveShelf for Reddit');
-    expect(shipFiles(root)).toEqual(expect.arrayContaining(['LICENSE', 'PRIVACY.md']));
-    expect(readFileSync(join(root, 'LICENSE'), 'utf8')).toMatch(/^MIT License[\s\S]*Copyright \(c\) 2026 Chris L/);
+    expect(shipFiles(root)).toEqual(expect.arrayContaining(['LICENSE', 'PRIVACY.md', 'THIRD_PARTY_NOTICES.md']));
     // the real contact address is in the policy and on the privacy page, and no placeholder is left
     for (const f of ['PRIVACY.md', 'landing/privacy.html']) {
       const text = readFileSync(join(root, f), 'utf8');
@@ -104,3 +105,57 @@ describe('manifest + package', () => {
     expect(r.warnings.join()).toMatch(/stub license mode/);
   });
 });
+
+// ---- licensing: AGPL-3.0-or-later, with third-party notices ----
+const SOURCE_REPO_URL = 'https://github.com/OWNER/saveshelf-for-reddit';
+describe('licensing', () => {
+  const read = (f) => readFileSync(join(root, f), 'utf8');
+  it('LICENSE is the full AGPL-3.0 text with the 2026 Chris L copyright, not MIT', () => {
+    const t = read('LICENSE');
+    expect(t).toMatch(/Copyright \(C\) 2026 Chris L/);
+    expect(t).toContain('SPDX-License-Identifier: AGPL-3.0-or-later');
+    expect(t).toContain('GNU AFFERO GENERAL PUBLIC LICENSE\n                       Version 3, 19 November 2007');
+    expect(t).toContain('13. Remote Network Interaction; Use with the GNU General Public License.');
+    expect(t).toContain('END OF TERMS AND CONDITIONS');
+    expect(t).not.toMatch(/MIT License|Permission is hereby granted, free of charge/);
+    expect(t.split('\n').length).toBeGreaterThan(650);
+  });
+  it('package.json declares AGPL-3.0-or-later; no stale MIT claim in the docs', () => {
+    expect(JSON.parse(read('package.json')).license).toBe('AGPL-3.0-or-later');
+    for (const f of ['README.md', 'CHROMEWEBSTORE.md', 'PRIVACY.md', 'store-listing/full-description.txt']) expect(read(f), f).not.toMatch(/\bMIT\b(?! \(for the icons)/);
+    expect(read('README.md')).toMatch(/AGPL-3\.0-or-later/);
+    expect(read('CHROMEWEBSTORE.md')).toMatch(/AGPL-3\.0-or-later/);
+  });
+  it('first-party source files carry an SPDX header; the vendored SDK is left byte-for-byte alone', () => {
+    for (const f of ['src/background.js', 'src/config.js', 'src/lib/sync.js', 'ui/library.js', 'ui/popup.js', 'ui/icons.js', 'options/options.js']) {
+      expect(read(f).slice(0, 120), f).toMatch(/^\/\/ SPDX-License-Identifier: AGPL-3\.0-or-later/);
+    }
+    expect(read('src/vendor/ExtPay.js')).not.toMatch(/SPDX-License-Identifier/);
+    expect(read('src/vendor/ExtPay.js')).toContain('AGPLv3 licensed.');
+  });
+  it('THIRD_PARTY_NOTICES covers ExtPay (AGPL, original license text kept), the MPL-2.0 polyfill and Lucide', () => {
+    const t = read('THIRD_PARTY_NOTICES.md');
+    expect(t).toMatch(/ExtPay[\s\S]*AGPL-3\.0-or-later/);
+    expect(t).toContain(read('node_modules/extpay/LICENSE').trim()); // its LICENSE text, verbatim
+    expect(t).toContain('AGPLv3 licensed.');
+    expect(t).toMatch(/webextension-polyfill 0\.7\.0 — MPL-2\.0/);
+    expect(t).toContain(read('node_modules/webextension-polyfill/LICENSE').trim()); // full MPL-2.0 text
+    expect(t).toMatch(/Lucide[\s\S]*ISC License/);
+  });
+  it('LICENSE and THIRD_PARTY_NOTICES.md are in the store zip file list', () => {
+    const files = shipFiles(root);
+    expect(files).toContain('LICENSE');
+    expect(files).toContain('THIRD_PARTY_NOTICES.md');
+  });
+  it('the public source URL is the same everywhere (and clearly marked while it is still the placeholder)', () => {
+    const where = ['README.md', 'PRIVACY.md', 'CHROMEWEBSTORE.md', 'THIRD_PARTY_NOTICES.md', 'store-listing/full-description.txt', 'landing/index.html', 'landing/privacy.html', 'options/options.html'];
+    for (const f of where) {
+      const t = read(f);
+      expect(t, f).toContain(SOURCE_REPO_URL);
+      if (SOURCE_REPO_URL.includes('/OWNER/')) expect(t, f).toContain('SOURCE_REPO_URL');
+      else expect(t, f).not.toMatch(/OWNER\/saveshelf|SOURCE_REPO_URL/);
+    }
+    expect(read('PRIVACY.md')).toMatch(/Source code/);
+  });
+});
+

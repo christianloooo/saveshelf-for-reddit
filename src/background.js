@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // MV3 service worker (ES module). Holds NO state in globals that matters: everything is in
 // IndexedDB / chrome.storage, because the worker can be stopped at any time.
 //

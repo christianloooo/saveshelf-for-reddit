@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Repository over IndexedDB: items, folders, tags, tombstones, meta.
 // All free-tier cap enforcement happens in the write paths that ADD items (upsertItems, importData),
 // inside the same transaction as the insert, so the cap cannot be raced past.

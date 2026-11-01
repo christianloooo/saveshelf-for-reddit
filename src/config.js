@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Central, build-time configuration. Everything that is "stubbed" lives here so it is
 // obvious what to change before publishing. See README.md ("Before you publish").
 

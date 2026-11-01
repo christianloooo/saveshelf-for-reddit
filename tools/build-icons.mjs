@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import fs from 'node:fs';
 import { ROOT } from './lib.mjs';
 const names = ['search','bookmark','library','refresh-cw','check','x','tag','download','file-json','file-spreadsheet','sparkles','lock','shield-check','external-link','message-square','file-text','calendar','chevron-down','plus','arrow-right','arrow-up','hard-drive','zap','infinity','search-x','circle-alert','layers','inbox','clock','link','settings','trash-2','cloud-off','list-filter','badge-check','heart','folder','folder-plus','folder-open','folder-input','pencil','ellipsis'];
@@ -6,7 +8,9 @@ for (const n of names) {
   const svg = fs.readFileSync(`${ROOT}node_modules/lucide-static/icons/${n}.svg`, 'utf8');
   out[n] = svg.replace(/<svg[^>]*>/, '').replace('</svg>', '').replace(/<!--.*?-->/gs,'').replace(/\s+/g, ' ').trim();
 }
-const js = `// Lucide icons (ISC license, https://lucide.dev), inlined so the extension needs no network or bundler.
+const js = `// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
+// Lucide icons (ISC license, https://lucide.dev), inlined so the extension needs no network or bundler.
 // Static strings only - never interpolate user data into these.
 const PATHS = ${JSON.stringify(out, null, 1)};
 

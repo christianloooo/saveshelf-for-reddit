@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Loads dist/unpacked in real headless Chrome and drives it against a LOCAL fake reddit.com
 // (HTTPS server + --host-resolver-rules, self-signed cert). Never touches the real Reddit.
 //   node scripts/e2e-chrome.mjs        (run `npm run build` first)

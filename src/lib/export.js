@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Export / import. JSON is the lossless format (tags, folders, order); CSV is for spreadsheets.
 
 import { LibraryError } from './errors.js';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Runs the SAME assertions against (a) leuifrontend's mock backend (the executable spec) and
 // (b) our real handlers (src/lib/ui-rpc.js) on fake-indexeddb + a fake Reddit.
 import { describe, it, expect } from 'vitest';

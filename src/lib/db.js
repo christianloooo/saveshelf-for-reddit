@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // IndexedDB plumbing: schema + small promise helpers. No business logic here.
 
 export const DB_NAME = 'saveshelf-library';

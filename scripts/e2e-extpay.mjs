@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Real-mode (EXTPAY_ID set) smoke test in real headless Chrome against a LOCAL fake extensionpay.com.
 // The real extensionpay.com is never contacted: --host-resolver-rules maps it to 127.0.0.1 (self-signed cert).
 // Covers: worker starts with ExtPay wired (no errors), upgrade opens the payment page via the SDK, and the

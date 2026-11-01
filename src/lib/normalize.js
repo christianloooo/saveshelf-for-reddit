@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Convert Reddit "Listing" children (t3 = link/post, t1 = comment) into our flat item shape.
 // Only fields we need are kept; nothing about other users beyond the public author name shown
 // on the user's own saved item.

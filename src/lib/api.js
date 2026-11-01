@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Public data API for the popup / library UI. See docs/DATA_API.md for the full contract.
 //
 //   import { api } from '../src/lib/api.js';          // in any extension page (popup, library, ...)

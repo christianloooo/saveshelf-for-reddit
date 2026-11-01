@@ -2,7 +2,7 @@
   "name": "saveshelf-for-reddit",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "author": "Chris L",
   "type": "module",
   "description": "Local, searchable library of your own Reddit saved posts and comments (MV3 Chrome extension).",

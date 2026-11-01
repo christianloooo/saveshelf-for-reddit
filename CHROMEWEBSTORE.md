@@ -25,7 +25,11 @@ Not requested: `tabs`, `cookies`, `history`, `<all_urls>`, `scripting`, `webRequ
 * Screenshots: the store-ready 1280x800 set is in `store-assets/screenshots/` (regenerate with `npm run screenshots`); `dist/e2e/*.png` are real-extension captures against fixture data.
 * Pricing: free up to 300 items; Pro is a one-time $9 via ExtensionPay. Disclose the in-app purchase.
 
+## Source repository (listing text)
+* Add to the listing description and the Support/Homepage field: "Open source (AGPL-3.0-or-later). Source code: https://github.com/OWNER/saveshelf-for-reddit" <!-- SOURCE_REPO_URL: placeholder, replace once the repo exists -->
+* The same line is in `store-listing/full-description.txt`.
+
 ## Review risks
 * Reddit ToS / API terms: the extension uses the user's own session against reddit.com JSON endpoints (not the OAuth API). Reddit's Data API terms restrict commercial use of the API; get a legal read before charging. Keep it single-user, polite and rate limited.
 * Stub build must never be uploaded: stub mode (no `EXTPAY_ID`) grants Pro locally. The zip carries a `-stub` suffix while stub mode is on.
-* The vendored ExtPay SDK is AGPL-3.0-or-later (its LICENSE file says LGPL-3.0; the polyfill inside is MPL-2.0). Settle this before publishing a real-mode build (see README "Payments / ExtensionPay").
+* Licensing: SaveShelf is AGPL-3.0-or-later, which matches the vendored ExtPay SDK (AGPL-3.0-or-later; its LICENSE file says LGPL-3.0; the polyfill inside is MPL-2.0). `LICENSE` and `THIRD_PARTY_NOTICES.md` ship in the zip. Open-source: say so in the listing and link the source repo.

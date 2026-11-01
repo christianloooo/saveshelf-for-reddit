@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Realistic-looking sample saves for the mock backend / screenshots. Not real posts.
 // [type, subreddit, title, author, snippet, score, comments, tags]
 export const SEED = [

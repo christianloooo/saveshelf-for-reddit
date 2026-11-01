@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Static validation of the extension: manifest sanity, file references, icon sizes, permission allowlist,
 // ES-module import graph resolves inside the shipped file set, no remote code.
 import { readFileSync, existsSync } from 'node:fs';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Regenerates store-assets/screenshots/*.png (1280x800) from the real UI running on the dev mock backend,
 // and refreshes the copies the landing page uses. Run: npm run screenshots
 import { chromium } from 'playwright-core';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Builds dist/unpacked (load-unpacked / e2e) and a store-ready zip. No `zip` CLI needed.
 //   node scripts/package.mjs
 import { readFileSync, writeFileSync, mkdirSync, rmSync, statSync } from 'node:fs';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Mock implementation of the data API (same method names/shapes as ../api.js).
 // lecoder: this file is the executable spec for search/filter semantics. Replace with the real service-worker handlers.
 // Folders: items carry folderId, getItems/getFacets/exportItems take a folderId filter, plus the folder methods (./mock-folders.js; ?folders=demo seeds some).

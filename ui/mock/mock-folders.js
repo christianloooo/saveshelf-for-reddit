@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Dev-only stand-in for the folder API (the real one is src/lib/api.js -> api.folders.*). In-memory; same error
 // behaviour (empty / duplicate name, unknown id). Not shipped.
 // Scenarios via URL: ?folders=demo seeds a few folders from the sample data's subreddits; default is no folders.

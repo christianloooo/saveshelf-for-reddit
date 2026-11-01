@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 // Tiny async key/value abstraction so logic can be unit-tested without chrome.* APIs.
 
 /** In-memory implementation (tests, and fallback when chrome.storage is missing). */
