@@ -49,7 +49,7 @@ Material changes will be described in the extension's release notes and this fil
 
 ## Contact
 
-Questions or deletion requests: **[PLACEHOLDER — replace with the real contact email before publishing: contact@example.com]**
+Questions or deletion requests: **christianlo3823@gmail.com**
 
 _(The extension keeps nothing on a server, so there is nothing for us to delete remotely; this address is for questions and for the opt-in statistics, if you enabled them.)_
 

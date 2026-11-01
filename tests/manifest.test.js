@@ -59,7 +59,12 @@ describe('manifest + package', () => {
     expect(manifest.action.default_title).toBe('SaveShelf for Reddit');
     expect(shipFiles(root)).toEqual(expect.arrayContaining(['LICENSE', 'PRIVACY.md']));
     expect(readFileSync(join(root, 'LICENSE'), 'utf8')).toMatch(/^MIT License[\s\S]*Copyright \(c\) 2026 Chris L/);
-    expect(readFileSync(join(root, 'PRIVACY.md'), 'utf8')).toMatch(/PLACEHOLDER/);
+    // the real contact address is in the policy and on the privacy page, and no placeholder is left
+    for (const f of ['PRIVACY.md', 'landing/privacy.html']) {
+      const text = readFileSync(join(root, f), 'utf8');
+      expect(text, f).toContain('christianlo3823@gmail.com');
+      expect(text, f).not.toMatch(/PLACEHOLDER|contact@example\.com/);
+    }
   });
   it('allows exactly one content script: ExtensionPay\'s own, on extensionpay.com payment pages', () => {
     const r = validate(root);

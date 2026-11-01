@@ -94,7 +94,7 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 2. **Analytics**: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging) and set `ANALYTICS_ENDPOINT`, or leave it empty to ship with no analytics at all. Update `PRIVACY.md` accordingly.
 3. **Name/branding**: "Reddit" in the name is a trademark risk (see `CHROMEWEBSTORE.md`).
 4. **Legal**: read Reddit's current terms/Data API terms before charging for something that reads reddit.com JSON.
-5. Replace the placeholder contact email in `PRIVACY.md`, host it (a privacy web page is still to do), replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is MIT (`LICENSE`).
+5. Host the privacy policy (`landing/privacy.html` is the web version of `PRIVACY.md`; keep them in sync; contact email is set), replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is MIT (`LICENSE`).
 6. `npm run build` — the zip loses its `-stub` suffix once `EXTPAY_ID` is set (stub mode off). Upload manually.
 
 ## Known gaps / honest caveats
