@@ -113,3 +113,17 @@ describe('export', () => {
     void dump;
   });
 });
+
+describe('restoring a backup from the real extension (live test file)', () => {
+  it('imports the live-test backup, then merging it again adds nothing', async () => {
+    const { readFileSync } = await import('node:fs');
+    const text = readFileSync(new URL('./fixtures/live-backup.json', import.meta.url), 'utf8');
+    const env = await makeEnv({});
+    const r = await env.api.import.json(text);
+    expect(r).toMatchObject({ added: 1, merged: 0, skipped: 0 });
+    const got = await env.api.library.search({ limit: 10 });
+    expect(got.total).toBe(1);
+    expect(got.items[0]).toMatchObject({ id: 't3_1xi36qj', subreddit: 'fries', title: 'My ideal cut of fries' });
+    expect(await env.api.import.json(text)).toMatchObject({ added: 0, merged: 1 });
+  });
+});

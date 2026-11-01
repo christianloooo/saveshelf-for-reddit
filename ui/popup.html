@@ -21,7 +21,6 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-ghost btn-icon" id="sync-btn" type="button" aria-label="Sync now" title="Sync now"><i data-icon="refresh-cw" data-size="16"></i></button>
     </header>
 
     <form class="search" id="search-form" role="search">
@@ -46,9 +45,13 @@
         </div>
         <div class="meter" id="meter" role="progressbar" aria-label="Free library usage" aria-valuemin="0"><span id="meter-fill"></span></div>
       </div>
-      <a class="btn btn-primary open" id="open-library" href="library.html" target="_blank" rel="noopener">
-        Open full library <i data-icon="arrow-right" data-size="16"></i>
-      </a>
+      <!-- Sync lives in the footer, not the top-right: the popup opens under the toolbar, right over a page's own top-right controls (e.g. Reddit's "Create"), so an early click there would land on the page. -->
+      <div class="actions">
+        <button class="btn" id="sync-btn" type="button" title="Sync your Reddit saves now"><i data-icon="refresh-cw" data-size="16"></i> Sync now</button>
+        <a class="btn btn-primary open" id="open-library" href="library.html" target="_blank" rel="noopener">
+          Open full library <i data-icon="arrow-right" data-size="16"></i>
+        </a>
+      </div>
     </footer>
   </main>
 </body>

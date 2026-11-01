@@ -1,6 +1,6 @@
 import { hydrateIcons } from './icons.js';
 import * as api from './api.js';
-import { h, ic, relTime, fmtDate, fmtNum, fmtCompact, highlight, debounce, meterLevel } from './util.js';
+import { h, ic, fill, relTime, fmtDate, fmtNum, fmtCompact, highlight, debounce, meterLevel, syncedText } from './util.js';
 
 const $ = (id) => document.getElementById(id);
 const PAGE = 40;
@@ -18,6 +18,7 @@ const state = {
   subFilter: '',
   showAllSubs: false,
   plan: null,
+  lastSyncAt: null, // from getSyncStatus: has a sync ever finished?
   items: [],
   matched: 0,
   total: 0,
@@ -169,16 +170,21 @@ function renderList({ append = false } = {}) {
     ? `${fmtNum(state.matched)} ${state.matched === 1 ? 'save' : 'saves'}${state.matched !== state.total ? ` of ${fmtNum(state.total)}` : ''}`
     : '';
 
+  renderEmpty();
+}
+
+function renderEmpty() {
   const empty = $('empty');
   empty.hidden = state.matched > 0;
   if (!empty.hidden) {
     const none = state.total === 0;
+    const synced = none && state.lastSyncAt !== null; // synced at least once and Reddit had nothing
     const bare = state.folder !== null && !state.query.trim() && !otherFilters(); // a folder with nothing in it
     const unfiled = state.folder === 'none';
-    empty.replaceChildren(
+    fill(empty,
       ic(none ? 'inbox' : bare ? 'folder-open' : 'search-x', 32),
-      h('h3', {}, none ? 'No saves yet' : bare ? (unfiled ? 'Everything is filed' : 'This folder is empty') : 'No saves match'),
-      h('p', {}, none ? 'Sync your Reddit saved posts to build your library.'
+      h('h3', {}, none ? (synced ? '0 saves' : 'No saves yet') : bare ? (unfiled ? 'Everything is filed' : 'This folder is empty') : 'No saves match'),
+      h('p', {}, none ? (synced ? 'Reddit has no saved posts for this account yet. Save a post on Reddit, then sync again.' : 'Sync your Reddit saved posts to build your library.')
         : bare ? (unfiled ? 'Every save is in a folder.' : 'Use “Move to folder” on any save to put it here.')
         : 'Try a different search or clear some filters.'),
       none ? null : h('button', { class: 'btn btn-sm', type: 'button', onclick: clearAll }, bare ? 'Show all saves' : 'Clear search and filters'),
@@ -238,8 +244,11 @@ async function renderSync() {
     s.state === 'syncing' ? (s.progress ? `Syncing ${fmtNum(s.progress.done)} of ${fmtNum(s.progress.total)}` : 'Syncing…')
     : s.state === 'error' ? 'Sync failed'
     : s.state === 'needs-login' ? 'Sign in to Reddit to sync'
-    : s.lastSyncAt ? `Synced ${relTime(s.lastSyncAt)}` : 'Not synced yet';
+    : s.lastSyncAt ? syncedText(s) : 'Not synced yet';
   $('sync').title = s.message ?? '';
+  const synced = s.lastSyncAt ?? null;
+  if ((synced === null) !== (state.lastSyncAt === null)) { state.lastSyncAt = synced; if (state.total === 0) renderEmpty(); }
+  state.lastSyncAt = synced;
 }
 
 /* ---------- folders ---------- */
@@ -485,7 +494,7 @@ async function reload() {
     renderList();
   } catch (err) {
     $('empty').hidden = false;
-    $('empty').replaceChildren(ic('cloud-off', 32), h('h3', {}, 'Could not load your library'), h('p', {}, err.message));
+    fill($('empty'), ic('cloud-off', 32), h('h3', {}, 'Could not load your library'), h('p', {}, err.message));
   }
 }
 

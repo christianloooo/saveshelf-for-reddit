@@ -233,7 +233,7 @@ export function createUiHandlers(getDeps, { notifyChanged = () => {} } = {}) {
       const lastOkAt = (await d.store.getMeta('lastOkAt', null)) ?? null;
       const staleness = (d.now?.() ?? Date.now()) - (progress?.at ?? 0);
       const live = running || Boolean(progress?.running && staleness < 2 * 60 * 1000);
-      const base = { lastSyncAt: lastOkAt, added: last?.added ?? 0, progress: null };
+      const base = { lastSyncAt: lastOkAt, added: last?.added ?? 0, total: await d.store.count(), progress: null };
       if (live) {
         const done = Math.max(0, progress?.fetched ?? 0);
         return { ...base, state: 'syncing', progress: { done, total: Math.max(done, EST_TOTAL) } };

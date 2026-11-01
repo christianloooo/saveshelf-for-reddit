@@ -26,7 +26,7 @@ The contract is owned by the UI (`ui/README-ui.md`, mock: `ui/mock/mock-backend.
 | `moveToFolder(ids, folderId\|null)` | | void; `null` un-files; unknown folder rejects `NOT_FOUND` |
 | `getPlan` | | `{plan:'free'\|'pro', cap:300\|null, count, pending, limitReached, priceLabel}` |
 | `upgrade` | | `{opened, stub}`. Real mode opens the ExtensionPay page; stub mode flips local Pro. Backfill of pending saves starts automatically after a free→pro flip |
-| `getSyncStatus` | | `{state:'idle'\|'syncing'\|'error'\|'needs-login', lastSyncAt:number\|null, added, progress:{done,total}\|null, message?}` |
+| `getSyncStatus` | | `{state:'idle'\|'syncing'\|'error'\|'needs-login', lastSyncAt:number\|null, added, total, progress:{done,total}\|null, message?}` |
 | `syncNow` | | the new sync status |
 
 `Item = {id, type, title, subreddit, author, url, snippet, score, numComments, savedAt, createdAt, tags, folderId}` (`folderId`: string \| null)

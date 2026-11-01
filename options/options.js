@@ -38,13 +38,15 @@ $('full').addEventListener('click', guard(async () => {
   await notify('sync');
 }));
 $('backup').addEventListener('click', guard(async () => { const x = await api.export.json(); save(x.filename, x.content, x.mime); say(`Exported ${x.count} items.`); }));
-$('restore-btn').addEventListener('click', () => $('restore').click());
 $('restore').addEventListener('change', guard(async () => {
   const f = $('restore').files[0];
   if (!f) return;
-  const r = await api.import.json(await f.text());
-  $('restore').value = '';
-  say(`Restored: ${r.added} added, ${r.merged} merged${r.skipped ? `, ${r.skipped} skipped (free limit)` : ''}.`);
+  say(`Restoring ${f.name}…`);
+  let r;
+  try { r = await api.import.json(await f.text()); } finally { $('restore').value = ''; } // so the same file can be picked again
+  say(r.added || r.merged || r.skipped
+    ? `Restored: ${r.added} added, ${r.merged} already here${r.skipped ? `, ${r.skipped} skipped (free limit)` : ''}.`
+    : 'That backup has no saves in it, so nothing was restored.');
   await notify('import');
 }));
 $('forget').addEventListener('click', guard(async () => { await api.library.restoreDeleted(); await load(); say('Done. They will come back on the next sync.'); }));

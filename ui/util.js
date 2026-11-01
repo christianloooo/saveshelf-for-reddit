@@ -15,6 +15,13 @@ export function h(tag, props = {}, ...children) {
   return el;
 }
 
+/** Replace an element's children, skipping null/undefined/false. Never call el.replaceChildren()/append() with a value that can be
+ *  null: the DOM would render it as the literal text "null". */
+export function fill(el, ...children) {
+  el.replaceChildren(...children.flat().filter((c) => c != null && c !== false));
+  return el;
+}
+
 /** Inline Lucide icon element. */
 export function ic(name, size = 16, label = '') {
   const t = document.createElement('template');
@@ -32,6 +39,11 @@ export function relTime(ts, now = Date.now()) {
   if (a < 86400 * 30) return rtf.format(Math.round(s / 86400), 'day');
   if (a < 86400 * 365) return rtf.format(Math.round(s / (86400 * 30)), 'month');
   return rtf.format(Math.round(s / (86400 * 365)), 'year');
+}
+/** "Synced 3 min ago · 12 new" / "· nothing new" / "· 0 saves" (first sync of an empty account). `s` is a getSyncStatus() result. */
+export function syncedText(s, now = Date.now()) {
+  const detail = s.added > 0 ? `${fmtNum(s.added)} new` : s.total === 0 ? '0 saves' : 'nothing new';
+  return `Synced ${relTime(s.lastSyncAt, now)} · ${detail}`;
 }
 export const fmtDate = (ts) => new Date(ts).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 const nf = new Intl.NumberFormat();

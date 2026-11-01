@@ -3,7 +3,7 @@
 //   node scripts/e2e-chrome.mjs        (run `npm run build` first)
 import https from 'node:https';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -194,7 +194,7 @@ try {
   await lib.p.click('#sync-btn'); await sleep(2500);
   await until(lib.p, () => /Synced/.test(document.getElementById('sync-text').textContent), null, 30000);
   check(seen.length - before <= 2, `incremental sync cheap (${seen.length - before} requests)`);
-  check(!/new/.test(await text(lib.p, '#sync-text')), 'library sync status shows nothing new');
+  { const t = await text(lib.p, '#sync-text'); check(/nothing new/.test(t) && !/\d+ new/.test(t), `library sync status says nothing new ("${t}")`); }
 
   // 6. options page, then the upgrade dialog (stub) flips the plan
   const opt = await open('options/options.html', 800, 900);
@@ -205,9 +205,34 @@ try {
     const x = await api.export.json();
     const imp = await api.import.json(x.content); // merge into itself: nothing new
     const s = await api.settings.set({ autoSync: true, autoSyncHours: 6 });
-    return { count: x.count, merged: imp.merged, added: imp.added, s };
+    return { count: x.count, merged: imp.merged, added: imp.added, s, content: x.content };
   });
   check(backup.count === N && backup.added === 0 && backup.s.autoSync === true, 'options page: backup + restore round trip, settings persist');
+  // restore through the real UI: click the visible "Restore from backup…" control -> native file chooser -> pick a file
+  await opt.p.bringToFront();
+  const restoreVia = async (file) => {
+    await opt.p.evaluate(() => { document.getElementById('status').textContent = ''; });
+    const [chooser] = await Promise.all([opt.p.waitForFileChooser({ timeout: 8000 }), opt.p.click('#restore-btn')]);
+    await chooser.accept([file]);
+    await until(opt.p, () => /Restored|nothing was restored|not|invalid|error/i.test(document.getElementById('status').textContent), null, 15000);
+    return text(opt.p, '#status');
+  };
+  const wipe = () => opt.p.evaluate(async () => { const { api } = await import('/src/lib/api.js'); await api.library.clearAll({ confirm: true }); return (await api.library.stats()).total; });
+  const backupFile = join(tmp, 'saveshelf-backup-e2e.json');
+  writeFileSync(backupFile, backup.content);
+  const liveFile = join(root, 'tests/fixtures/live-backup.json'); // a backup written by the real extension during the live test
+  check(await wipe() === 0, 'options: library wiped before restore test');
+  let st = await restoreVia(liveFile);
+  check(/Restored: 1 added/.test(st) && (await rpc(opt.p, 'getItems', {})).result.total === 1, `restore (real file chooser) of the live-test backup: "${st}"`);
+  st = await restoreVia(liveFile);
+  check(/Restored: 0 added, 1 already here/.test(st), `restoring the same file again adds nothing: "${st}"`);
+  check(await wipe() === 0, 'options: wiped again');
+  st = await restoreVia(backupFile);
+  r = await rpc(opt.p, 'getItems', {});
+  check(new RegExp(`Restored: ${N} added`).test(st) && r.ok && r.result.total === N, `restore (real file chooser) of the full ${N}-item backup: "${st}"`);
+  writeFileSync(join(tmp, 'bad.json'), '{"nope":true}');
+  st = await restoreVia(join(tmp, 'bad.json'));
+  check(/Not a SaveShelf export/.test(st), `restore of a wrong file is rejected with a message: "${st}"`);
   const alarms = await opt.p.evaluate(() => chrome.alarms.getAll());
   check(alarms.some((a) => a.name === 'auto-sync' && Math.round(a.periodInMinutes) === 360), 'auto-sync alarm scheduled by worker');
 

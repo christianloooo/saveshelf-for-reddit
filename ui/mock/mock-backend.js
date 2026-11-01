@@ -1,7 +1,7 @@
 // Mock implementation of the data API (same method names/shapes as ../api.js).
 // lecoder: this file is the executable spec for search/filter semantics. Replace with the real service-worker handlers.
 // Folders: items carry folderId, getItems/getFacets/exportItems take a folderId filter, plus the folder methods (./mock-folders.js; ?folders=demo seeds some).
-// Scenarios via URL: ?snippet=null|empty|blank (first 3 items get no usable snippet) ?count=243 &plan=free|pro &cap=300 &pending=0 &sync=idle|syncing|error|needs-login
+// Scenarios via URL: ?snippet=null|empty|blank (first 3 items get no usable snippet) ?count=243 &plan=free|pro &cap=300 &pending=0 &sync=idle|syncing|error|needs-login|never (never synced) &added=12 (items added by the last sync)
 import { buildExport } from '../export-format.js';
 import { createMockFolders } from './mock-folders.js';
 import { SEED, FILLER_SUBS, FILLER_TOPICS, FILLER_FORMS, FILLER_AUTHORS, FILLER_TAGS } from './sample-data.js';
@@ -152,9 +152,10 @@ export function createMock(params) {
     async upgrade() { state.plan = 'pro'; return { opened: true, mock: true }; },
     async getSyncStatus() {
       return {
-        state: syncState,
-        lastSyncAt: syncState === 'needs-login' ? null : lastSyncAt,
-        added: 12,
+        state: syncState === 'never' ? 'idle' : syncState,
+        lastSyncAt: syncState === 'needs-login' || syncState === 'never' ? null : lastSyncAt,
+        added: Number(params.get('added') ?? 12),
+        total: state.items.length,
         progress: syncState === 'syncing' ? { done: 340, total: 1000 } : null,
         message: syncState === 'error' ? 'Reddit rate-limited the request. Retrying in 2 min.' : syncState === 'needs-login' ? 'Sign in to Reddit in this browser to sync.' : undefined,
       };

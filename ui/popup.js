@@ -1,6 +1,6 @@
 import { hydrateIcons } from './icons.js';
 import { getRecent, getItems, getPlan, getSyncStatus, syncNow, upgrade, onChange, openLibraryUrl } from './api.js';
-import { h, ic, relTime, fmtNum, highlight, debounce, meterLevel } from './util.js';
+import { h, ic, relTime, fmtNum, highlight, debounce, meterLevel, syncedText } from './util.js';
 
 const $ = (id) => document.getElementById(id);
 hydrateIcons();
@@ -25,6 +25,10 @@ function renderItems(items, query = '') {
   const empty = $('empty');
   empty.hidden = items.length > 0;
   if (!items.length) empty.textContent = query ? `No saved posts match “${query}”.` : 'Nothing saved yet. Save a post on Reddit and sync.';
+  if (!items.length && !query) getSyncStatus().then((s) => {
+    // a sync that finished and found nothing is a result, not "not synced yet"
+    if (s.lastSyncAt && s.total === 0 && !$('empty').hidden && !$('q').value.trim()) empty.textContent = '0 saves: Reddit has none for this account yet. Save a post on Reddit, then sync again.';
+  }).catch(() => {});
 }
 
 async function showList(query) {
@@ -52,7 +56,7 @@ async function showSync() {
     s.state === 'syncing' ? (s.progress ? `Syncing ${fmtNum(s.progress.done)} / ${fmtNum(s.progress.total)}` : 'Syncing…')
     : s.state === 'error' ? 'Sync failed'
     : s.state === 'needs-login' ? 'Sign in to Reddit'
-    : s.lastSyncAt ? `Synced ${relTime(s.lastSyncAt)}${s.added ? ` · ${s.added} new` : ''}` : 'Not synced yet';
+    : s.lastSyncAt ? syncedText(s) : 'Not synced yet';
   $('sync').title = s.message ?? '';
 }
 

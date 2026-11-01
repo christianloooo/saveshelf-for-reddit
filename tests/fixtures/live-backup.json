@@ -1,0 +1,31 @@
+{
+  "format": "saveshelf-library",
+  "version": 1,
+  "appVersion": "0.1.0",
+  "exportedAt": "2026-11-01T21:57:41.319Z",
+  "folders": [],
+  "items": [
+    {
+      "id": "t3_1xi36qj",
+      "kind": "post",
+      "subreddit": "fries",
+      "author": "Garden_Jolly",
+      "score": 479,
+      "createdAt": 1793227878000,
+      "permalink": "https://www.reddit.com/r/fries/comments/1xi36qj/my_ideal_cut_of_fries/",
+      "nsfw": false,
+      "title": "My ideal cut of fries",
+      "body": "",
+      "url": "https://i.redd.it/9hfm8mf5fayh1.jpeg",
+      "domain": "i.redd.it",
+      "numComments": 49,
+      "flair": "",
+      "removedOnReddit": false,
+      "seq": 1793570098842000,
+      "tags": [],
+      "folderId": null,
+      "firstSyncedAt": 1793570099126,
+      "lastSyncedAt": 1793570133283
+    }
+  ]
+}

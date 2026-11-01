@@ -26,8 +26,10 @@
       <h2>Backup &amp; restore</h2>
       <div class="row">
         <button class="btn" id="backup" type="button">Download full backup (.json)</button>
-        <button class="btn" id="restore-btn" type="button">Restore from backup…</button>
-        <input type="file" id="restore" accept="application/json,.json" hidden>
+        <!-- A real <label> around a visually hidden (not display:none) file input: the browser opens the chooser natively, no script click needed, and it is keyboard-focusable. -->
+        <label class="btn" id="restore-btn">Restore from backup…
+          <input type="file" id="restore" class="file-input" accept="application/json,.json">
+        </label>
       </div>
       <p class="note">The backup keeps tags and folders. Restoring merges into your library and respects the free limit.</p>
     </section>

@@ -279,6 +279,7 @@ describe.each(Object.keys(backends))('UI contract: %s', (name) => {
     const s = await h.getSyncStatus();
     expect(['idle', 'syncing', 'error', 'needs-login']).toContain(s.state);
     expect(typeof s.added).toBe('number');
+    expect(typeof s.total).toBe('number');
     expect(s.lastSyncAt === null || typeof s.lastSyncAt === 'number').toBe(true);
     expect(s.progress === null || (typeof s.progress.done === 'number' && typeof s.progress.total === 'number')).toBe(true);
     const n = await h.syncNow();
@@ -338,8 +339,24 @@ describe('real backend specifics', () => {
     const good = await makeEnv({ children: makeChildren(5) });
     const hg = createUiHandlers(async () => good.deps);
     const gs = await hg.syncNow();
-    expect(gs).toMatchObject({ state: 'idle', added: 5 });
+    expect(gs).toMatchObject({ state: 'idle', added: 5, total: 5 });
     expect(typeof gs.lastSyncAt).toBe('number');
+  });
+
+  it('re-sync with nothing new reports added 0 over a non-empty library; a first sync of an empty account reports total 0', async () => {
+    const env = await makeEnv({ children: makeChildren(5) });
+    const h = createUiHandlers(async () => env.deps);
+    expect(await h.getSyncStatus()).toMatchObject({ lastSyncAt: null, total: 0 }); // never synced
+    expect(await h.syncNow()).toMatchObject({ added: 5, total: 5 });
+    const again = await h.syncNow();
+    expect(again).toMatchObject({ state: 'idle', added: 0, total: 5 });
+    expect(typeof again.lastSyncAt).toBe('number');
+
+    const empty = await makeEnv({ children: [] }); // account with 0 saves
+    const he = createUiHandlers(async () => empty.deps);
+    const first = await he.syncNow();
+    expect(first).toMatchObject({ state: 'idle', added: 0, total: 0 });
+    expect(typeof first.lastSyncAt).toBe('number'); // a finished sync, so the UI can say "0 saves"
   });
 
   it('link posts get their outbound URL as snippet (never an empty/null card)', async () => {
