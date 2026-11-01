@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { describe, it, expect } from 'vitest';
-import { createAnalytics, EVENTS } from '../src/lib/analytics.js';
+import { createAnalytics, analyticsAvailable, EVENTS } from '../src/lib/analytics.js';
 import { createMemoryKv } from '../src/lib/kv.js';
 import { makeEnv } from './helpers/env.js';
 import { makeChildren } from './helpers/fixtures.js';
@@ -17,6 +17,21 @@ function make({ endpoint = 'https://stats.example.com/e', fail = false, clock = 
   });
   return { a, sent, kv, clock };
 }
+
+describe('analytics availability (decides whether Settings shows the opt-in at all)', () => {
+  it('the shipped config has no endpoint, so analytics are unavailable and the UI stays hidden', async () => {
+    const { CONFIG } = await import('../src/config.js');
+    expect(CONFIG.ANALYTICS_ENDPOINT).toBe('');
+    expect(analyticsAvailable()).toBe(false);
+    expect(analyticsAvailable(CONFIG)).toBe(false);
+  });
+  it('is available only for a real https endpoint', () => {
+    expect(analyticsAvailable({ ANALYTICS_ENDPOINT: '' })).toBe(false);
+    expect(analyticsAvailable({})).toBe(false);
+    expect(analyticsAvailable({ ANALYTICS_ENDPOINT: 'http://insecure.example.com' })).toBe(false);
+    expect(analyticsAvailable({ ANALYTICS_ENDPOINT: 'https://stats.example.com/e' })).toBe(true);
+  });
+});
 
 describe('analytics', () => {
   it('is off by default: nothing is sent', async () => {

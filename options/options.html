@@ -40,7 +40,8 @@
       <button class="btn" id="forget" type="button">Allow deleted items to sync back</button>
     </section>
 
-    <section>
+    <!-- Hidden unless this build has an analytics endpoint (options.js reveals it); the shipped build has none. -->
+    <section id="analytics-section" hidden>
       <h2>Anonymous usage stats</h2>
       <label class="row"><input type="checkbox" id="analytics"> Share anonymous install / daily-active counts</label>
       <p class="note">Off by default. Never includes your Reddit username, saves, searches or tags. This is exactly what would be sent:</p>

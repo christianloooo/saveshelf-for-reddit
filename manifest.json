@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SaveShelf for Reddit",
   "short_name": "SaveShelf",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Search, tag and export your Reddit saved posts and comments. Everything stays on your device, beyond Reddit's 1,000-save limit.",
   "homepage_url": "https://saveshelf.surge.sh/",
   "minimum_chrome_version": "135",

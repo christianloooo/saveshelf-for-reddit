@@ -16,7 +16,7 @@ WHAT IT DOES
 PRIVACY
 • Your library is stored only in this browser (IndexedDB). SaveShelf has no server that receives your saves.
 • Only the saved list of the Reddit account you are signed in to is read. It does not read other pages you browse.
-• Anonymous usage counts (install, daily active, purchase) are off by default and only sent if you switch them on in Settings. Settings shows the exact data that would be sent. They never include your Reddit username, your saves, searches, tags or folder names.
+• No analytics: this version collects no usage data or statistics of any kind and sends nothing to the developer. There is no tracking setting because there is nothing to track.
 • Full policy: see the privacy policy link on this listing.
 
 FREE AND PRO

@@ -25,6 +25,16 @@ const utcDay = (ms) => new Date(ms).toISOString().slice(0, 10);
  * @param {() => Promise<'free'|'pro'>} deps.getTier
  * @param {string} deps.version  extension version (manifest)
  */
+/**
+ * True only when this build has somewhere to send events (an https:// ANALYTICS_ENDPOINT).
+ * The Settings page shows the opt-in toggle only then, so a build without an endpoint has no
+ * analytics UI at all.
+ * @param {{ANALYTICS_ENDPOINT?: string}} [config]
+ */
+export function analyticsAvailable(config = CONFIG) {
+  return typeof config.ANALYTICS_ENDPOINT === 'string' && /^https:\/\//i.test(config.ANALYTICS_ENDPOINT);
+}
+
 export function createAnalytics({
   kv,
   fetchImpl = globalThis.fetch?.bind(globalThis),
@@ -35,7 +45,7 @@ export function createAnalytics({
   config = CONFIG,
 }) {
   const state = async () => (await kv.get(KEY, {})) ?? {};
-  const endpointOk = () => typeof config.ANALYTICS_ENDPOINT === 'string' && /^https:\/\//i.test(config.ANALYTICS_ENDPOINT);
+  const endpointOk = () => analyticsAvailable(config);
 
   async function isEnabled() {
     return Boolean((await state()).enabled);

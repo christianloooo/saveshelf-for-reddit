@@ -159,3 +159,32 @@ describe('licensing', () => {
   });
 });
 
+// ---- v0.1.1: no analytics, and nothing in the UI or the docs pretends otherwise ----
+describe('no analytics in this version', () => {
+  const read = (f) => readFileSync(join(root, f), 'utf8');
+  it('manifest and package.json are 0.1.1', () => {
+    expect(JSON.parse(read('manifest.json')).version).toBe('0.1.1');
+    expect(JSON.parse(read('package.json')).version).toBe('0.1.1');
+  });
+  it('the options page ships the analytics section hidden, and options.js only reveals it when an endpoint exists', () => {
+    expect(read('options/options.html')).toMatch(/<section id="analytics-section" hidden>/);
+    const js = read('options/options.js');
+    expect(js).toContain("analyticsAvailable } from '../src/lib/analytics.js'");
+    expect(js).toContain("$('analytics-section').hidden = !analyticsAvailable();");
+    expect(read('src/config.js')).toMatch(/ANALYTICS_ENDPOINT: '',/);
+  });
+  it('the policy, listing and landing pages say plainly that nothing is collected', () => {
+    for (const f of ['PRIVACY.md', 'landing/privacy.html']) {
+      const t = read(f);
+      expect(t, f).toMatch(/collects no analytics/i);
+      expect(t, f).toMatch(/ANALYTICS_ENDPOINT/);
+      expect(t, f).not.toMatch(/opt-in\)|analytics choice|tick the box in Settings|if you enabled them/i);
+    }
+    expect(read('store-listing/full-description.txt')).toMatch(/No analytics/);
+    expect(read('store-listing/full-description.txt')).not.toMatch(/switch them on in Settings/);
+    expect(read('CHROMEWEBSTORE.md')).toMatch(/No analytics in this version/);
+    expect(read('landing/index.html')).toMatch(/no analytics/i);
+    expect(read('landing/index.html')).not.toMatch(/Anonymous usage counts are off unless/);
+  });
+});
+

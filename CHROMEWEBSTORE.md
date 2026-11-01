@@ -15,7 +15,7 @@ Not requested: `tabs`, `cookies`, `history`, `<all_urls>`, `scripting`, `webRequ
 
 ## Data-use disclosures (Privacy practices tab)
 * Collected & stored **locally only**: "Web history"-adjacent personal content = the user's own Reddit saved items; nothing leaves the device.
-* Opt-in anonymous counters (install / daily active / conversion), random id, off by default.
+* No analytics in this version: `ANALYTICS_ENDPOINT` is empty (nothing is ever sent) and the Settings analytics toggle is hidden when it is empty. Do NOT tick "User activity".
 * Certify: not sold; not used for unrelated purposes; not used for creditworthiness.
 * Privacy policy URL: https://saveshelf.surge.sh/privacy.html (live on Surge, from `landing/`). Homepage: https://saveshelf.surge.sh/
 

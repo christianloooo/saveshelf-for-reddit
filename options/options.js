@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Chris L. Licensed under the GNU AGPL v3 or later; see LICENSE.
 import { api } from '../src/lib/api.js';
+import { analyticsAvailable } from '../src/lib/analytics.js';
 
 const $ = (id) => document.getElementById(id);
 const say = (t, err = false) => { $('status').textContent = t; $('status').style.color = err ? 'var(--danger)' : ''; };
@@ -18,8 +19,12 @@ async function load() {
   $('autosync').checked = s.autoSync;
   $('hours').value = s.autoSyncHours;
   $('hours').disabled = !s.autoSync;
-  $('analytics').checked = s.analyticsOptIn;
-  $('preview').textContent = JSON.stringify(await api.settings.analyticsPreview(), null, 2);
+  // The analytics opt-in only exists in a build that has an endpoint to send to; otherwise the section stays hidden.
+  $('analytics-section').hidden = !analyticsAvailable();
+  if (analyticsAvailable()) {
+    $('analytics').checked = s.analyticsOptIn;
+    $('preview').textContent = JSON.stringify(await api.settings.analyticsPreview(), null, 2);
+  }
   $('deleted-note').textContent = stats.deletedCount
     ? `${stats.deletedCount} item(s) you deleted are remembered so sync does not re-add them.`
     : 'Nothing is being remembered as deleted.';

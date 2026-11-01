@@ -206,6 +206,13 @@ try {
   // 6. options page, then the upgrade dialog (stub) flips the plan
   const opt = await open('options/options.html', 800, 900);
   check((await opt.p.evaluate(() => document.getElementById('testmode').hidden)) === false, 'options page loads (stub test-mode visible)');
+  // no analytics endpoint in this build: the opt-in toggle must not be visible (and so must not exist for a reviewer to click)
+  const analyticsUi = await opt.p.evaluate(() => {
+    const sec = document.getElementById('analytics-section');
+    const box = document.getElementById('analytics');
+    return { hidden: sec.hidden, shown: Boolean(sec.offsetParent), boxShown: Boolean(box.offsetParent), text: /analytics|usage stats|install \/ daily/i.test(document.body.innerText) };
+  });
+  check(analyticsUi.hidden && !analyticsUi.shown && !analyticsUi.boxShown && !analyticsUi.text, 'options page: no analytics toggle or text is visible (empty ANALYTICS_ENDPOINT)');
   await opt.p.screenshot({ path: join(shots, 'options.png') });
   const backup = await opt.p.evaluate(async () => {
     const { api } = await import('/src/lib/api.js');
