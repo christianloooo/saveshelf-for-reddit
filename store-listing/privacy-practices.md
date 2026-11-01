@@ -45,7 +45,10 @@ Handling statements to match (for the "how is it used" fields): used only to pro
 3. I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
 ## Privacy policy URL
-**TBD.** No hosted URL exists yet. The policy text is `PRIVACY.md`; `landing/privacy.html` is its web version (contact: christianlo3823@gmail.com). Host `landing/` (for example GitHub Pages or any static host), then paste the live `/privacy.html` URL here and on the dashboard. The URL must be public and match the answers above.
+**https://saveshelf.surge.sh/privacy.html** (live on Surge, served from `landing/`). The text matches `PRIVACY.md` and the page links its contact address christianlo3823@gmail.com. Paste this URL in the dashboard. It must stay public and match the answers above.
+
+## Homepage / website field
+**https://saveshelf.surge.sh/** (also set as `homepage_url` in `manifest.json`).
 
 ## Consistency checks before submitting
 * `PRIVACY.md` and `landing/privacy.html` still say the same thing and the analytics section matches the build config.

@@ -2,6 +2,8 @@
 
 _Draft for review by the publisher before the extension is submitted. Last updated: 2026-11-01._
 
+Web version: https://saveshelf.surge.sh/privacy.html
+
 **Short version:** your saved posts and comments stay on your device. We do not run a server that receives them, we cannot see them, and we never sell or share data.
 
 ## What the extension does with your data

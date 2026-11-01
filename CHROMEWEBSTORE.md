@@ -17,7 +17,7 @@ Not requested: `tabs`, `cookies`, `history`, `<all_urls>`, `scripting`, `webRequ
 * Collected & stored **locally only**: "Web history"-adjacent personal content = the user's own Reddit saved items; nothing leaves the device.
 * Opt-in anonymous counters (install / daily active / conversion), random id, off by default.
 * Certify: not sold; not used for unrelated purposes; not used for creditworthiness.
-* Privacy policy URL: host `PRIVACY.md` (e.g. on GitHub Pages) and paste the URL.
+* Privacy policy URL: https://saveshelf.surge.sh/privacy.html (live on Surge, from `landing/`). Homepage: https://saveshelf.surge.sh/
 
 ## Listing text starting points
 * Name: "SaveShelf for Reddit" (short name "SaveShelf"). "Reddit" appears only descriptively ("for Reddit"); Chrome Web Store and Reddit both discourage trademarks in names, so keep the "not affiliated with Reddit, Inc." line in the listing and on the landing page, and be ready to drop "for Reddit" if a reviewer objects.

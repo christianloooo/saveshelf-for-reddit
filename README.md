@@ -102,7 +102,7 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 2. **Analytics**: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging) and set `ANALYTICS_ENDPOINT`, or leave it empty to ship with no analytics at all. Update `PRIVACY.md` accordingly.
 3. **Name/branding**: "Reddit" in the name is a trademark risk (see `CHROMEWEBSTORE.md`).
 4. **Legal**: read Reddit's current terms/Data API terms before charging for something that reads reddit.com JSON.
-5. Host the privacy policy (`landing/privacy.html` is the web version of `PRIVACY.md`; keep them in sync; contact email is set), replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is AGPL-3.0-or-later (`LICENSE`, `THIRD_PARTY_NOTICES.md`); the public source repo is https://github.com/christianloooo/saveshelf-for-reddit.
+5. The privacy policy is hosted at https://saveshelf.surge.sh/privacy.html (the web version of `PRIVACY.md`, from `landing/`; keep them in sync; redeploy `landing/` after edits). Replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is AGPL-3.0-or-later (`LICENSE`, `THIRD_PARTY_NOTICES.md`); the public source repo is https://github.com/christianloooo/saveshelf-for-reddit.
 6. `npm run build` — with `EXTPAY_ID` set the zip has no `-stub` suffix (`dist/saveshelf-for-reddit-<ver>.zip`). Upload manually.
 
 ## Known gaps / honest caveats

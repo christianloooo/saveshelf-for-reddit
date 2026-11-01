@@ -17,14 +17,15 @@ Regenerate the images: `node store-listing/make-assets.mjs` (from the repo root;
 | Permission justifications (storage, alarms, reddit.com host, extensionpay.com content script) | `privacy-practices.md` | Ready. |
 | Remote code | `privacy-practices.md` | Ready: No. |
 | Data usage checkboxes + 3 certifications | `privacy-practices.md` | Ready, but two boxes depend on the published build (payments, analytics); see open items. |
-| Privacy policy URL | `privacy-practices.md` | **TBD, nothing hosted yet.** |
+| Privacy policy URL | `privacy-practices.md` | Ready: https://saveshelf.surge.sh/privacy.html (live on Surge). |
 | Support / contact email | none | **Needs Chris** (see below). |
-| Homepage / support URL | none | **Needs Chris**: `landing/` is not hosted anywhere yet. |
+| Homepage / website URL | `privacy-practices.md` | Ready: https://saveshelf.surge.sh/ (live on Surge; also `homepage_url` in the manifest). |
+| Support URL | none | Optional; can reuse the homepage or the support email. |
 | Distribution, regions, pricing | none | Free listing with in-app purchase via ExtensionPay; choose in the dashboard. |
 
 ## Open items for Chris
 1. **Contact/support email.** `PRIVACY.md`, `landing/privacy.html` and the full description use `christianlo3823@gmail.com` (the earlier `contact@example.com` placeholder is gone). Confirm it is the address you want public on the listing, or give a dedicated support address. The dashboard also needs a verified contact email on the developer account.
-2. **Hosted privacy policy URL** (and a homepage URL if wanted). Host `landing/` and paste the `/privacy.html` URL. Also replace `PLACEHOLDER_EXTENSION_ID` in the landing page links with the store ID once assigned.
+2. **Hosted URLs are done** (homepage and `/privacy.html` on Surge). Still open: replace `PLACEHOLDER_EXTENSION_ID` in the landing page install links with the store ID once assigned, then redeploy. Surge is a free static host; move to a custom domain if wanted, keeping the privacy URL stable.
 3. **ExtPay account.** At the time of this commit `src/config.js` in git has `EXTPAY_ID = ''` (stub mode), but another agent has an uncommitted change setting `EXTPAY_ID = 'saveshelf-for-reddit'` (real mode). Confirm that account exists under Chris's login, that Stripe is connected, and that the $9 one-time plan (nickname `pro`) is created in the ExtensionPay dashboard. Never upload a `-stub` zip. Resolve the SDK licence question in the README (AGPL) before publishing. With real mode, tick "Financial and payment information" (see `privacy-practices.md`).
 4. **Analytics.** `ANALYTICS_ENDPOINT` is empty, so nothing is ever sent even if a user opts in. Either leave it empty (then do not tick "User activity", and ideally trim the analytics section of PRIVACY.md to say it is not active) or stand up a collector that does not log IPs and set the endpoint (then tick "User activity").
 5. **Reddit terms/legal.** The extension reads reddit.com JSON with the user's own session. Get a legal read on Reddit's terms before charging $9. Also be ready to drop "for Reddit" from the name if a reviewer objects to the trademark.
