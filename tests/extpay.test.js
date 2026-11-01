@@ -275,3 +275,16 @@ describe('the vendored official SDK (offline, chrome.* faked, fetch mocked)', ()
 });
 
 afterEach(() => vi.restoreAllMocks());
+
+describe('plan and price live in the ExtensionPay dashboard, not in code', () => {
+  it('never names a plan nickname or passes one to the payment page', async () => {
+    const { readdirSync } = await import('node:fs');
+    const dir = new URL('../src/lib/', import.meta.url);
+    const files = [...readdirSync(dir).filter((f) => f.endsWith('.js')).map((f) => new URL(f, dir)), new URL('../src/background.js', import.meta.url)];
+    for (const f of files) {
+      const text = readFileSync(f, 'utf8').replace(/\/\/.*$/gm, '');
+      expect(text, f.pathname).not.toMatch(/nickname|getPlans|planNickname/i);
+      expect(text, f.pathname).not.toMatch(/openPaymentPage\(\s*[^)\s]/); // always the default plan
+    }
+  });
+});

@@ -22,8 +22,9 @@ const ext = join(tmp, 'ext');
 cpSync(join(root, 'dist/unpacked'), ext, { recursive: true });
 const cfgPath = join(ext, 'src/config.js');
 const cfg = readFileSync(cfgPath, 'utf8');
-if (!/const EXTPAY_ID = '';/.test(cfg)) throw new Error('expected the stub default `const EXTPAY_ID = \'\';` in src/config.js');
-writeFileSync(cfgPath, cfg.replace("const EXTPAY_ID = '';", `const EXTPAY_ID = '${ID}';`));
+if (!/const EXTPAY_ID = '[^']*';/.test(cfg)) throw new Error('EXTPAY_ID line not found in src/config.js');
+// always force the throwaway test id (the release build carries the real one) so we only ever talk to the local fake
+writeFileSync(cfgPath, cfg.replace(/const EXTPAY_ID = '[^']*';/, `const EXTPAY_ID = '${ID}';`));
 
 execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '2', '-subj', '/CN=extensionpay.com',
   '-addext', 'subjectAltName=DNS:extensionpay.com', '-keyout', join(tmp, 'k.pem'), '-out', join(tmp, 'c.pem')], { stdio: 'ignore' });

@@ -4,7 +4,7 @@ A local, searchable library of **your own** Reddit saved posts and comments. Red
 
 * **Sync**: from your logged-in reddit.com session (`/user/<you>/saved.json`), paginated, sequential, rate-limit aware, incremental. No scraping of other users, no Reddit login handled by the extension.
 * **Library**: full-text search, subreddit/type/date filters, tags, CSV/JSON export (free on every tier), lossless JSON backup/restore (options page). Folders (create, rename, delete, move a save to a folder, filter by folder) in the library sidebar.
-* **Free** keeps up to 300 items (never deletes; extra saves are counted as *pending*). **Pro** = unlimited, $9 one-time via [ExtensionPay](https://extensionpay.com) — **stubbed by default**; real ExtensionPay is wired behind `EXTPAY_ID`, see below.
+* **Free** keeps up to 300 items (never deletes; extra saves are counted as *pending*). **Pro** = unlimited, $9 one-time via [ExtensionPay](https://extensionpay.com) — **the repo now ships in real license mode** (`EXTPAY_ID = 'saveshelf-for-reddit'`). **Stripe is not connected to the ExtensionPay account yet, so live payments do not work**: Upgrade opens the real ExtensionPay page but nobody can complete a purchase until Stripe is connected in the ExtensionPay dashboard. Unit tests and `npm run e2e` run in stub mode (see below).
 * **Analytics**: opt-in, anonymous, stubbed endpoint (see `PRIVACY.md`).
 
 Status: feature-complete prototype, **unpublished, untested against the live reddit.com**. Nothing has been paid for, registered or submitted.
@@ -41,7 +41,7 @@ tools/           icon/landing/screenshot generators, UI-only mock e2e (`npm run 
 npm install
 npm run check      # validate manifest -> unit tests -> UI mock e2e -> build zip -> e2e in headless Chrome -> ExtPay real-mode e2e
 npm test           # unit tests (vitest)
-npm run build      # dist/unpacked + dist/saveshelf-for-reddit-<ver>-stub.zip
+npm run build      # dist/unpacked + dist/saveshelf-for-reddit-<ver>.zip   (a `-stub` suffix appears only if EXTPAY_ID is blanked)
 ```
 
 Load unpacked: chrome://extensions → Developer mode → "Load unpacked" → `dist/unpacked` (log in to reddit.com, click the toolbar icon, press sync).
@@ -52,9 +52,11 @@ Load unpacked: chrome://extensions → Developer mode → "Load unpacked" → `d
 
 ## Payments / ExtensionPay
 
-Default = **stub mode**: no network, no account, "Upgrade" flips a local Pro flag (also available as a test switch on the options page). Real mode is fully wired but dormant until an id is set.
+**Shipped config = real mode**: `EXTPAY_ID = 'saveshelf-for-reddit'` in `src/config.js`. The plan (**$9 one-time, nickname `pro`**) is defined in the ExtensionPay dashboard; the code never names a plan or sets a price (`tests/extpay.test.js` pins that; `PRO_PRICE_USD` is display text only). **Stripe is not connected yet, so live payments will not work** until the owner connects Stripe in the ExtensionPay dashboard.
 
-| | stub (default, `EXTPAY_ID = ''`) | real (`EXTPAY_ID = '<id>'`) |
+**Stub mode** (blank the id): no network, no account, "Upgrade" flips a local Pro flag (also available as a test switch on the options page). The test suites keep covering it without touching the shipped config: `vitest.config.js` blanks the id while loading `src/config.js`, and `npm run e2e` runs a temp copy of `dist/unpacked` with the id blanked; `e2e:extpay` swaps in a throwaway id and talks only to a local fake.
+
+| | stub (`EXTPAY_ID = ''`) | real (shipped: `EXTPAY_ID = 'saveshelf-for-reddit'`) |
 |---|---|---|
 | plan source | local flag | `extpay.getUser().paid`, re-checked at most every 30 s while Free, daily by alarm, after `onPaid`, and before each manual sync |
 | Upgrade button | flips the flag | `extpay.openPaymentPage()` (a tab on extensionpay.com) |
@@ -90,12 +92,12 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 
 ## Before you publish (checklist — each needs the owner's go-ahead)
 
-1. **Payments** (see "Payments / ExtensionPay" below): register the extension at extensionpay.com (owner's account, test mode first), then set `const EXTPAY_ID = '<your id>'` in `src/config.js`. That alone switches the build out of stub mode (`STUB_LICENSE` is derived: stub unless an id is set, or `FORCE_STUB_LICENSE = true`). Re-check that the stub-only test switch in the options page disappears. Resolve the SDK licence question (AGPL, see below).
+1. **Payments** (see "Payments / ExtensionPay" below): the extension is registered and `EXTPAY_ID = 'saveshelf-for-reddit'` is set ($9 one-time, plan nickname `pro`). **Still to do: connect Stripe in the ExtensionPay dashboard** (until then live payments cannot complete), and check test-mode checkout first (item 11 of the live test). Resolve the SDK licence question (AGPL, see below).
 2. **Analytics**: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging) and set `ANALYTICS_ENDPOINT`, or leave it empty to ship with no analytics at all. Update `PRIVACY.md` accordingly.
 3. **Name/branding**: "Reddit" in the name is a trademark risk (see `CHROMEWEBSTORE.md`).
 4. **Legal**: read Reddit's current terms/Data API terms before charging for something that reads reddit.com JSON.
 5. Host the privacy policy (`landing/privacy.html` is the web version of `PRIVACY.md`; keep them in sync; contact email is set), replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is MIT (`LICENSE`).
-6. `npm run build` — the zip loses its `-stub` suffix once `EXTPAY_ID` is set (stub mode off). Upload manually.
+6. `npm run build` — with `EXTPAY_ID` set the zip has no `-stub` suffix (`dist/saveshelf-for-reddit-<ver>.zip`). Upload manually.
 
 ## Known gaps / honest caveats
 * **Not verified against live Reddit.** Whether extension-origin `fetch(..., {credentials:'include'})` carries the session cookie (SameSite, Reddit's bot defences) is unproven; the e2e uses a fake. Test with a real account before anything else (see "Manual live test on a real Reddit account" above). Reddit may also change/limit `.json` endpoints.

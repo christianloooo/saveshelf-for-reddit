@@ -1,8 +1,11 @@
 // Central, build-time configuration. Everything that is "stubbed" lives here so it is
 // obvious what to change before publishing. See README.md ("Before you publish").
 
-/** The ExtensionPay extension id (the slug you chose at extensionpay.com). Empty = stub mode. */
-const EXTPAY_ID = '';
+/** The ExtensionPay extension id (registered at extensionpay.com). Empty = stub mode.
+ *  The plan itself ($9 one-time, nickname 'pro') lives in the ExtensionPay dashboard, NOT in this code: the extension
+ *  never names a plan or sets a price on the payment page (PRO_PRICE_USD below is display text only). Stripe must be
+ *  connected on the ExtensionPay account before live payments work. */
+const EXTPAY_ID = 'saveshelf-for-reddit';
 /** Dev override: stay in stub mode even when EXTPAY_ID is set. */
 const FORCE_STUB_LICENSE = false;
 
@@ -13,10 +16,10 @@ export const CONFIG = Object.freeze({
 
   /**
    * License / payments (ExtensionPay).
-   * EXTPAY_ID = ''        -> STUB mode (the default): no network, no account, Pro is a local flag (license.js).
+   * EXTPAY_ID = ''        -> STUB mode (tests, local dev): no network, no account, Pro is a local flag (license.js).
    * EXTPAY_ID = '<id>'    -> REAL mode: the vendored ExtPay SDK (src/vendor/, see README) checks/sells Pro.
    * STUB_LICENSE is derived from those two; FORCE_STUB_LICENSE = true keeps stub mode even with an id set.
-   * Setting EXTPAY_ID (the id of the extension you registered at extensionpay.com) is the only step left.
+   * Shipped release config: EXTPAY_ID is set, so builds are real mode. Unit tests blank it (vitest.config.js) to test stub mode.
    */
   STUB_LICENSE: FORCE_STUB_LICENSE || !EXTPAY_ID,
   EXTPAY_ID,

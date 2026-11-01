@@ -3,7 +3,7 @@
 //   node scripts/e2e-chrome.mjs        (run `npm run build` first)
 import https from 'node:https';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, existsSync, mkdirSync, rmSync, writeFileSync, cpSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,10 +12,15 @@ import { createFakeReddit } from '../tests/helpers/fixtures.js';
 import { makeChildren } from '../tests/helpers/fixtures.js';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const ext = join(root, 'dist/unpacked');
+const built = join(root, 'dist/unpacked');
+// This suite drives the STUB-mode UI (local Pro flip, test-mode switch). The release build has EXTPAY_ID set, so run a temp
+// copy with the id blanked; real mode is covered by e2e-extpay.mjs.
+const ext = join(mkdtempSync(join(tmpdir(), 'rse2e-ext-')), 'ext');
 const shots = join(root, 'dist/e2e');
 const chromePath = process.env.CHROME_PATH ?? ['/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(existsSync);
-if (!existsSync(join(ext, 'manifest.json'))) throw new Error('dist/unpacked missing: run `npm run build` first');
+if (!existsSync(join(built, 'manifest.json'))) throw new Error('dist/unpacked missing: run `npm run build` first');
+cpSync(built, ext, { recursive: true });
+{ const f = join(ext, 'src/config.js'); const c = readFileSync(f, 'utf8'); if (!/const EXTPAY_ID = '[^']*';/.test(c)) throw new Error('EXTPAY_ID line not found in src/config.js'); writeFileSync(f, c.replace(/const EXTPAY_ID = '[^']*';/, "const EXTPAY_ID = '';")); }
 if (!chromePath) throw new Error('no Chrome found; set CHROME_PATH');
 mkdirSync(shots, { recursive: true });
 

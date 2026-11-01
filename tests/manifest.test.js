@@ -76,17 +76,31 @@ describe('manifest + package', () => {
   it('real mode (EXTPAY_ID set) validates clean and is no longer reported as a stub', () => {
     const r = sandbox((m, dir) => {
       const f = join(dir, 'src/config.js');
-      writeFileSync(f, readFileSync(f, 'utf8').replace("const EXTPAY_ID = '';", "const EXTPAY_ID = 'saveshelf-test';"));
+      writeFileSync(f, readFileSync(f, 'utf8').replace(/const EXTPAY_ID = '[^']*';/, "const EXTPAY_ID = 'saveshelf-test';"));
     });
     expect(r.errors).toEqual([]);
     expect(r.stub).toBe(false);
     const forced = sandbox((m, dir) => {
       const f = join(dir, 'src/config.js');
-      writeFileSync(f, readFileSync(f, 'utf8').replace("const EXTPAY_ID = '';", "const EXTPAY_ID = 'x';").replace('const FORCE_STUB_LICENSE = false;', 'const FORCE_STUB_LICENSE = true;'));
+      writeFileSync(f, readFileSync(f, 'utf8').replace(/const EXTPAY_ID = '[^']*';/, "const EXTPAY_ID = 'x';").replace('const FORCE_STUB_LICENSE = false;', 'const FORCE_STUB_LICENSE = true;'));
     });
     expect(forced.stub).toBe(true);
   });
-  it('warns loudly while the license is stubbed', () => {
-    expect(validate(root).warnings.join()).toMatch(/stub license mode/);
+  it('the shipped config is the release config: real mode with the registered ExtensionPay id, no stub warning', () => {
+    const cfg = readFileSync(join(root, 'src/config.js'), 'utf8');
+    expect(cfg).toContain("const EXTPAY_ID = 'saveshelf-for-reddit';");
+    expect(cfg).toContain('const FORCE_STUB_LICENSE = false;');
+    const r = validate(root);
+    expect(r.stub).toBe(false);
+    expect(r.warnings.join()).not.toMatch(/stub license mode/);
+    expect(r.errors).toEqual([]);
+  });
+  it('warns loudly while the license is stubbed (no EXTPAY_ID)', () => {
+    const r = sandbox((m, dir) => {
+      const f = join(dir, 'src/config.js');
+      writeFileSync(f, readFileSync(f, 'utf8').replace(/const EXTPAY_ID = '[^']*';/, "const EXTPAY_ID = '';"));
+    });
+    expect(r.stub).toBe(true);
+    expect(r.warnings.join()).toMatch(/stub license mode/);
   });
 });
