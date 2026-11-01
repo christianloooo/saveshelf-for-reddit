@@ -1,0 +1,3 @@
+Productivity > Workflow & Planning
+
+Reason: it is a personal organiser for saved content (search, tags, folders, export), the same job as web clippers such as Evernote Web Clipper and Notion Web Clipper, which the store lists under Workflow & Planning. Fallback: Productivity > Tools. Not Social Networking, because the extension does not post, share or notify.

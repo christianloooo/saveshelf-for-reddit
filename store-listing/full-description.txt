@@ -1,0 +1,33 @@
+SaveShelf for Reddit keeps a private, searchable copy of the posts and comments you save on Reddit, stored in your own browser.
+
+Reddit's Saved page only lists your most recent 1,000 saves, and it has no real search, tags or export. SaveShelf copies your saves onto your computer so you can find them later, organise them, and keep them after Reddit stops listing them.
+
+WHAT IT DOES
+• Sync your saves. Uses the Reddit account you are already signed in to in Chrome to read your own saved posts and comments from reddit.com. It never asks for your Reddit password and never changes anything on Reddit.
+• Search. Full-text search across titles, post text, subreddits, authors and your own tags.
+• Filter. Narrow by subreddit, posts or comments, when you saved it, tag, or folder.
+• Tag. Add your own tags to any save and filter by several at once.
+• Folders. Create, rename and delete folders, move saves into them, and filter by folder (or by "Unfiled"). Deleting a folder never deletes the saves in it.
+• Export. Download everything, or only what you have filtered, as JSON or CSV. Export is free on every plan.
+• Backup and restore. Download a full backup (.json) from Settings, including tags and folders, and restore it later.
+• Toolbar popup. Search from the toolbar, see your most recent saves, press Sync now, and open the full library.
+• Optional auto-sync. Off by default. Turn it on in Settings and pick how many hours between background syncs.
+
+PRIVACY
+• Your library is stored only in this browser (IndexedDB). SaveShelf has no server that receives your saves.
+• Only the saved list of the Reddit account you are signed in to is read. It does not read other pages you browse.
+• Anonymous usage counts (install, daily active, purchase) are off by default and only sent if you switch them on in Settings. Settings shows the exact data that would be sent. They never include your Reddit username, your saves, searches, tags or folder names.
+• Full policy: see the privacy policy link on this listing.
+
+FREE AND PRO
+• Free: keeps up to 300 saved items, with search, filters, tags, folders and JSON/CSV export. Nothing is ever deleted when you reach the limit; saves beyond it are counted as waiting.
+• Pro: $9, one-time payment, no subscription. Removes the 300-item limit. Payment is handled on extensionpay.com (powered by Stripe); SaveShelf never sees your card details and you do not need a SaveShelf account.
+
+GOOD TO KNOW
+• Reddit only exposes your latest 1,000 saves, so that is what can be imported on day one. After that, SaveShelf keeps each new save, including ones Reddit later stops listing.
+• If you unsave something on Reddit, your local copy stays unless you delete it.
+• You can delete your whole local library at any time from Settings. Uninstalling the extension removes its stored data.
+
+SaveShelf for Reddit is an independent tool. It is not affiliated with, endorsed by, or sponsored by Reddit, Inc. "Reddit" is a trademark of Reddit, Inc.
+
+Questions: christianlo3823@gmail.com
