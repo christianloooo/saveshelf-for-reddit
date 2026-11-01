@@ -107,7 +107,7 @@ describe('manifest + package', () => {
 });
 
 // ---- licensing: AGPL-3.0-or-later, with third-party notices ----
-const SOURCE_REPO_URL = 'https://github.com/OWNER/saveshelf-for-reddit';
+const SOURCE_REPO_URL = 'https://github.com/christianloooo/saveshelf-for-reddit';
 describe('licensing', () => {
   const read = (f) => readFileSync(join(root, f), 'utf8');
   it('LICENSE is the full AGPL-3.0 text with the 2026 Chris L copyright, not MIT', () => {

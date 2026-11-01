@@ -2,7 +2,7 @@
 
 SaveShelf for Reddit is licensed under the GNU Affero General Public License v3.0 or later (see `LICENSE`).
 It includes or ships the following third-party material. Corresponding source for SaveShelf itself is at
-https://github.com/OWNER/saveshelf-for-reddit (SOURCE_REPO_URL: placeholder until the repo exists).
+https://github.com/christianloooo/saveshelf-for-reddit.
 
 ---
 

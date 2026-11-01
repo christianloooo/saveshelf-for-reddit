@@ -30,6 +30,6 @@ GOOD TO KNOW
 
 SaveShelf for Reddit is an independent tool. It is not affiliated with, endorsed by, or sponsored by Reddit, Inc. "Reddit" is a trademark of Reddit, Inc.
 
-Open source (AGPL-3.0-or-later). Source code: https://github.com/OWNER/saveshelf-for-reddit  [SOURCE_REPO_URL: placeholder, replace once the repo exists]
+Open source (AGPL-3.0-or-later). Source code: https://github.com/christianloooo/saveshelf-for-reddit
 
 Questions: christianlo3823@gmail.com

@@ -26,7 +26,7 @@ Not requested: `tabs`, `cookies`, `history`, `<all_urls>`, `scripting`, `webRequ
 * Pricing: free up to 300 items; Pro is a one-time $9 via ExtensionPay. Disclose the in-app purchase.
 
 ## Source repository (listing text)
-* Add to the listing description and the Support/Homepage field: "Open source (AGPL-3.0-or-later). Source code: https://github.com/OWNER/saveshelf-for-reddit" <!-- SOURCE_REPO_URL: placeholder, replace once the repo exists -->
+* Add to the listing description and the Support/Homepage field: "Open source (AGPL-3.0-or-later). Source code: https://github.com/christianloooo/saveshelf-for-reddit"
 * The same line is in `store-listing/full-description.txt`.
 
 ## Review risks
