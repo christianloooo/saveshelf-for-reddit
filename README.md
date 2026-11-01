@@ -5,7 +5,7 @@ A local, searchable library of **your own** Reddit saved posts and comments. Red
 * **Sync**: from your logged-in reddit.com session (`/user/<you>/saved.json`), paginated, sequential, rate-limit aware, incremental. No scraping of other users, no Reddit login handled by the extension.
 * **Library**: full-text search, subreddit/type/date filters, tags, CSV/JSON export (free on every tier), lossless JSON backup/restore (options page). Folders (create, rename, delete, move a save to a folder, filter by folder) in the library sidebar.
 * **Free** keeps up to 300 items (never deletes; extra saves are counted as *pending*). **Pro** = unlimited, $9 one-time via [ExtensionPay](https://extensionpay.com) — **the repo now ships in real license mode** (`EXTPAY_ID = 'saveshelf-for-reddit'`). **Stripe is not connected to the ExtensionPay account yet, so live payments do not work**: Upgrade opens the real ExtensionPay page but nobody can complete a purchase until Stripe is connected in the ExtensionPay dashboard. Unit tests and `npm run e2e` run in stub mode (see below).
-* **Analytics**: opt-in, anonymous, stubbed endpoint (see `PRIVACY.md`).
+* **Analytics**: none in this version. `ANALYTICS_ENDPOINT` is empty, so nothing is sent and the Settings opt-in is hidden (the opt-in code stays in the repo; see `PRIVACY.md`).
 
 Status: feature-complete prototype, **unpublished, untested against the live reddit.com**. Nothing has been paid for, registered or submitted.
 
@@ -24,7 +24,7 @@ src/config.js            ALL stubs/knobs (cap, price, STUB_LICENSE, EXTPAY_ID, A
 src/lib/                 db, store, search, sync, license, extpay (ExtensionPay glue), analytics, export, api (rich), ui-rpc (UI contract), runtime (wiring)
 src/vendor/              the official ExtPay SDK 3.1.2 (see "Payments" below; regenerate with `npm run vendor:extpay`)
 ui/                      popup + full-page library UI (merged from the former UI project; see below)
-options/                 minimal settings page: auto-sync, backup/restore, analytics opt-in, test-mode Pro toggle
+options/                 minimal settings page: auto-sync, backup/restore, analytics opt-in (shown only if `ANALYTICS_ENDPOINT` is set), test-mode Pro toggle
 icons/                   from the UI source
 docs/DATA_API.md         the data API (UI contract + rich API)
 tests/                   vitest + fake-indexeddb; fixtures in Reddit's listing format (tests/fixtures, tests/helpers)
@@ -99,10 +99,10 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 ## Before you publish (checklist — each needs the owner's go-ahead)
 
 1. **Payments** (see "Payments / ExtensionPay" below): the extension is registered and `EXTPAY_ID = 'saveshelf-for-reddit'` is set ($9 one-time, plan nickname `pro`). **Still to do: connect Stripe in the ExtensionPay dashboard** (until then live payments cannot complete), and check test-mode checkout first (item 11 of the live test). 
-2. **Analytics**: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging) and set `ANALYTICS_ENDPOINT`, or leave it empty to ship with no analytics at all. Update `PRIVACY.md` accordingly.
+2. **Analytics**: v0.1.1 ships with none (empty `ANALYTICS_ENDPOINT`, no Settings toggle). To add them later: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging), set `ANALYTICS_ENDPOINT`, and update `PRIVACY.md` and the store listing first.
 3. **Name/branding**: "Reddit" in the name is a trademark risk (see `CHROMEWEBSTORE.md`).
 4. **Legal**: read Reddit's current terms/Data API terms before charging for something that reads reddit.com JSON.
-5. The privacy policy is hosted at https://saveshelf.surge.sh/privacy.html (the web version of `PRIVACY.md`, from `landing/`; keep them in sync; redeploy `landing/` after edits). Replace `PLACEHOLDER_EXTENSION_ID` in the landing page links. License is AGPL-3.0-or-later (`LICENSE`, `THIRD_PARTY_NOTICES.md`); the public source repo is https://github.com/christianloooo/saveshelf-for-reddit.
+5. The privacy policy is hosted at https://saveshelf.surge.sh/privacy.html (the web version of `PRIVACY.md`, from `landing/`; keep them in sync; redeploy `landing/` after edits). The landing page install links point at the store id `hefofgeogpjlajeijffmekoplniijgjf`. License is AGPL-3.0-or-later (`LICENSE`, `THIRD_PARTY_NOTICES.md`); the public source repo is https://github.com/christianloooo/saveshelf-for-reddit.
 6. `npm run build` — with `EXTPAY_ID` set the zip has no `-stub` suffix (`dist/saveshelf-for-reddit-<ver>.zip`). Upload manually.
 
 ## Known gaps / honest caveats
@@ -111,6 +111,6 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 * `savedAt` is when we first saw an item (Reddit doesn't expose the true saved time). Items backfilled after upgrading are ordered by Reddit's order but dated at backfill time.
 * The sync worker can be interrupted if Chrome kills the service worker mid-sync; progress is persisted and the next sync resumes incrementally.
 * Folders are part of the UI↔service-worker contract (`folderId` on items and filters, five folder methods); there is no bulk "move" yet (the library has no multi-select). No settings UI in the contract beyond the minimal options page.
-* Opt-in analytics undercounts installs; conversions are only counted for opted-in users.
+* There are no analytics in this version. If the opt-in counter is ever enabled it will undercount installs, and conversions would only be counted for opted-in users.
 * The vendored `ui/api.js` has a dynamic `import('./mock/mock-backend.js')` that only runs outside the extension; the mock is excluded from the package so it is dead code there.
 * `ui/library.js` `renderCard` passes a `null` child to `li.append()`, which renders the text "null" when a card has no snippet. Worked around server-side (link posts get their URL as the snippet) but the UI should filter nulls.
