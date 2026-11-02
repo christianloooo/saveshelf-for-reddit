@@ -107,7 +107,7 @@ export function createUiHandlers(getDeps, { notifyChanged = () => {} } = {}) {
       count,
       pending: pro ? 0 : Number(await d.store.getMeta('pending', 0)) || 0,
       limitReached: !pro && count >= cap,
-      priceLabel: `$${CONFIG.PRO_PRICE_USD} one-time`,
+      priceLabel: `$${CONFIG.PRO_PRICE_USD.toFixed(2)} one-time`,
     };
   }
 

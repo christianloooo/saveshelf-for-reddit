@@ -21,7 +21,7 @@ PRIVACY
 
 FREE AND PRO
 • Free: keeps up to 300 saved items, with search, filters, tags, folders and JSON/CSV export. Nothing is ever deleted when you reach the limit; saves beyond it are counted as waiting.
-• Pro: $9, one-time payment, no subscription. Removes the 300-item limit. Payment is handled on extensionpay.com (powered by Stripe); SaveShelf never sees your card details and you do not need a SaveShelf account.
+• Pro: $1.50, one-time payment, no subscription. Removes the 300-item limit. Payment is handled on extensionpay.com (powered by Stripe); SaveShelf never sees your card details and you do not need a SaveShelf account.
 
 GOOD TO KNOW
 • Reddit only exposes your latest 1,000 saves, so that is what can be imported on day one. After that, SaveShelf keeps each new save, including ones Reddit later stops listing.

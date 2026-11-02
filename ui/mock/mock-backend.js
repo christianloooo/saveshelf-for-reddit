@@ -109,7 +109,7 @@ export function createMock(params) {
     count: state.items.length,
     pending: state.plan === 'pro' ? 0 : pending,
     limitReached: state.plan !== 'pro' && state.items.length >= cap,
-    priceLabel: '$9 one-time',
+    priceLabel: '$1.50 one-time',
   });
 
   return {

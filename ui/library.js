@@ -228,10 +228,10 @@ function renderBanner() {
       full
         ? h('p', {}, h('strong', {}, `Free library full (${fmtNum(p.count)} of ${fmtNum(p.cap)}). `),
             p.pending ? `${fmtNum(p.pending)} more saves are waiting to be added.` : 'New saves won’t be added until you upgrade. Search and export still work.')
-        : h('p', {}, h('strong', {}, `${fmtNum(p.count)} of ${fmtNum(p.cap)} free items used. `), 'Pro removes the limit for a one-time $9.'),
+        : h('p', {}, h('strong', {}, `${fmtNum(p.count)} of ${fmtNum(p.cap)} free items used. `), 'Pro removes the limit for a one-time $1.50.'),
       meter,
     ),
-    h('button', { class: `btn ${full ? 'btn-primary' : ''}`, type: 'button', command: 'show-modal', commandfor: 'upsell' }, full ? 'Unlock unlimited · $9' : 'See Pro'),
+    h('button', { class: `btn ${full ? 'btn-primary' : ''}`, type: 'button', command: 'show-modal', commandfor: 'upsell' }, full ? 'Unlock unlimited · $1.50' : 'See Pro'),
   );
   $('upsell-lead').textContent = p.pending
     ? `Reddit only shows your latest 1,000 saves. You’ve filled the ${fmtNum(p.cap)} free slots and ${fmtNum(p.pending)} more are waiting to be added.`

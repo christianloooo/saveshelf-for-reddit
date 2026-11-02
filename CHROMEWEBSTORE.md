@@ -23,7 +23,7 @@ Not requested: `tabs`, `cookies`, `history`, `<all_urls>`, `scripting`, `webRequ
 * Name: "SaveShelf for Reddit" (short name "SaveShelf"). "Reddit" appears only descriptively ("for Reddit"); Chrome Web Store and Reddit both discourage trademarks in names, so keep the "not affiliated with Reddit, Inc." line in the listing and on the landing page, and be ready to drop "for Reddit" if a reviewer objects.
 * Summary (≤132): "Search, tag and export your Reddit saved posts and comments. Everything stays on your device, beyond Reddit's 1,000-save limit."
 * Screenshots: the store-ready 1280x800 set is in `store-assets/screenshots/` (regenerate with `npm run screenshots`); `dist/e2e/*.png` are real-extension captures against fixture data.
-* Pricing: free up to 300 items; Pro is a one-time $9 via ExtensionPay. Disclose the in-app purchase.
+* Pricing: free up to 300 items; Pro is a one-time $1.50 via ExtensionPay. Disclose the in-app purchase.
 
 ## Source repository (listing text)
 * Add to the listing description and the Support/Homepage field: "Open source (AGPL-3.0-or-later). Source code: https://github.com/christianloooo/saveshelf-for-reddit"

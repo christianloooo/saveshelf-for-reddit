@@ -29,7 +29,7 @@ The extension has no server that receives the user's saves. Items below say whet
 |---|---|---|
 | Personally identifiable information | **Yes (conservative)** | Reddit username, read from `/api/me.json` and used only to build the request URL on reddit.com. Not stored in analytics, not sent to the publisher. |
 | Health information | No | n/a |
-| Financial and payment information | **Yes, if the published build has real ExtensionPay (`EXTPAY_ID` set)** | The one-time $9 purchase is made on extensionpay.com / Stripe. The extension never sees card data; it only receives paid/unpaid status. Tick it to stay on the safe side of review. In a stub build (no payments) do not tick. |
+| Financial and payment information | **Yes, if the published build has real ExtensionPay (`EXTPAY_ID` set)** | The one-time $1.50 purchase is made on extensionpay.com / Stripe. The extension never sees card data; it only receives paid/unpaid status. Tick it to stay on the safe side of review. In a stub build (no payments) do not tick. |
 | Authentication information | No | The extension never reads Reddit cookies or tokens. The browser attaches the user's own session to the reddit.com request. ExtensionPay keeps a random key locally; no password is handled by the extension. |
 | Personal communications | No | n/a |
 | Location | No | n/a |

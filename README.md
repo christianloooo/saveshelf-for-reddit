@@ -4,7 +4,7 @@ A local, searchable library of **your own** Reddit saved posts and comments. Red
 
 * **Sync**: from your logged-in reddit.com session (`/user/<you>/saved.json`), paginated, sequential, rate-limit aware, incremental. No scraping of other users, no Reddit login handled by the extension.
 * **Library**: full-text search, subreddit/type/date filters, tags, CSV/JSON export (free on every tier), lossless JSON backup/restore (options page). Folders (create, rename, delete, move a save to a folder, filter by folder) in the library sidebar.
-* **Free** keeps up to 300 items (never deletes; extra saves are counted as *pending*). **Pro** = unlimited, $9 one-time via [ExtensionPay](https://extensionpay.com) — **the repo now ships in real license mode** (`EXTPAY_ID = 'saveshelf-for-reddit'`). **Stripe is not connected to the ExtensionPay account yet, so live payments do not work**: Upgrade opens the real ExtensionPay page but nobody can complete a purchase until Stripe is connected in the ExtensionPay dashboard. Unit tests and `npm run e2e` run in stub mode (see below).
+* **Free** keeps up to 300 items (never deletes; extra saves are counted as *pending*). **Pro** = unlimited, $1.50 one-time via [ExtensionPay](https://extensionpay.com) — **the repo now ships in real license mode** (`EXTPAY_ID = 'saveshelf-for-reddit'`). **Stripe is not connected to the ExtensionPay account yet, so live payments do not work**: Upgrade opens the real ExtensionPay page but nobody can complete a purchase until Stripe is connected in the ExtensionPay dashboard. Unit tests and `npm run e2e` run in stub mode (see below).
 * **Analytics**: none in this version. `ANALYTICS_ENDPOINT` is empty, so nothing is sent and the Settings opt-in is hidden (the opt-in code stays in the repo; see `PRIVACY.md`).
 
 Status: feature-complete prototype, **unpublished, untested against the live reddit.com**. Nothing has been paid for, registered or submitted.
@@ -58,7 +58,7 @@ Load unpacked: chrome://extensions → Developer mode → "Load unpacked" → `d
 
 ## Payments / ExtensionPay
 
-**Shipped config = real mode**: `EXTPAY_ID = 'saveshelf-for-reddit'` in `src/config.js`. The plan (**$9 one-time, nickname `pro`**) is defined in the ExtensionPay dashboard; the code never names a plan or sets a price (`tests/extpay.test.js` pins that; `PRO_PRICE_USD` is display text only). **Stripe is not connected yet, so live payments will not work** until the owner connects Stripe in the ExtensionPay dashboard.
+**Shipped config = real mode**: `EXTPAY_ID = 'saveshelf-for-reddit'` in `src/config.js`. The plan (**$1.50 one-time, nickname `pro`**) is defined in the ExtensionPay dashboard; the code never names a plan or sets a price (`tests/extpay.test.js` pins that; `PRO_PRICE_USD` is display text only). **Stripe is not connected yet, so live payments will not work** until the owner connects Stripe in the ExtensionPay dashboard.
 
 **Stub mode** (blank the id): no network, no account, "Upgrade" flips a local Pro flag (also available as a test switch on the options page). The test suites keep covering it without touching the shipped config: `vitest.config.js` blanks the id while loading `src/config.js`, and `npm run e2e` runs a temp copy of `dist/unpacked` with the id blanked; `e2e:extpay` swaps in a throwaway id and talks only to a local fake.
 
@@ -98,7 +98,7 @@ Record what you saw (status codes, counts, anything odd) before changing code; t
 
 ## Before you publish (checklist — each needs the owner's go-ahead)
 
-1. **Payments** (see "Payments / ExtensionPay" below): the extension is registered and `EXTPAY_ID = 'saveshelf-for-reddit'` is set ($9 one-time, plan nickname `pro`). **Still to do: connect Stripe in the ExtensionPay dashboard** (until then live payments cannot complete), and check test-mode checkout first (item 11 of the live test). 
+1. **Payments** (see "Payments / ExtensionPay" below): the extension is registered and `EXTPAY_ID = 'saveshelf-for-reddit'` is set ($1.50 one-time, plan nickname `pro`). **Still to do: connect Stripe in the ExtensionPay dashboard** (until then live payments cannot complete), and check test-mode checkout first (item 11 of the live test). 
 2. **Analytics**: v0.1.1 ships with none (empty `ANALYTICS_ENDPOINT`, no Settings toggle). To add them later: stand up a collector (HTTPS, CORS POST of `text/plain` JSON, no IP logging), set `ANALYTICS_ENDPOINT`, and update `PRIVACY.md` and the store listing first.
 3. **Name/branding**: "Reddit" in the name is a trademark risk (see `CHROMEWEBSTORE.md`).
 4. **Legal**: read Reddit's current terms/Data API terms before charging for something that reads reddit.com JSON.

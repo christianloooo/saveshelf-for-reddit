@@ -249,7 +249,7 @@ describe.each(Object.keys(backends))('UI contract: %s', (name) => {
     const p = await h.getPlan();
     expect(Object.keys(p).sort()).toEqual(['cap', 'count', 'limitReached', 'pending', 'plan', 'priceLabel']);
     expect(p).toMatchObject({ plan: 'free', cap: 300, count: 120, pending: 0, limitReached: false });
-    expect(p.priceLabel).toMatch(/\$9/);
+    expect(p.priceLabel).toMatch(/\$1\.50/);
   });
 
   it('getPlan: at the cap -> limitReached + pending; search/tags/export keep working; nothing is deleted', async () => {

@@ -11,10 +11,10 @@ const DAY = 86400000;
 const realCfg = { ...CONFIG, STUB_LICENSE: false };
 
 describe('license (stub mode)', () => {
-  it('ships in stub mode with a 300 cap and $9 price', () => {
+  it('ships in stub mode with a 300 cap and $1.50 price', () => {
     expect(CONFIG.STUB_LICENSE).toBe(true);
     expect(CONFIG.FREE_CAP).toBe(300);
-    expect(CONFIG.PRO_PRICE_USD).toBe(9);
+    expect(CONFIG.PRO_PRICE_USD).toBe(1.5);
     expect(CONFIG.EXTPAY_ID).toBe('');
   });
 

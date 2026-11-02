@@ -4,7 +4,7 @@
 // obvious what to change before publishing. See README.md ("Before you publish").
 
 /** The ExtensionPay extension id (registered at extensionpay.com). Empty = stub mode.
- *  The plan itself ($9 one-time, nickname 'pro') lives in the ExtensionPay dashboard, NOT in this code: the extension
+ *  The plan itself ($1.50 one-time, nickname 'pro') lives in the ExtensionPay dashboard, NOT in this code: the extension
  *  never names a plan or sets a price on the payment page (PRO_PRICE_USD below is display text only). Stripe must be
  *  connected on the ExtensionPay account before live payments work. */
 const EXTPAY_ID = 'saveshelf-for-reddit';
@@ -14,7 +14,7 @@ const FORCE_STUB_LICENSE = false;
 export const CONFIG = Object.freeze({
   /** Max items a free user can keep in the library. Pro = unlimited. */
   FREE_CAP: 300,
-  PRO_PRICE_USD: 9,
+  PRO_PRICE_USD: 1.5,
 
   /**
    * License / payments (ExtensionPay).
