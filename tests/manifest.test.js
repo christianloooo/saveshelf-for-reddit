@@ -63,7 +63,7 @@ describe('manifest + package', () => {
     // the real contact address is in the policy and on the privacy page, and no placeholder is left
     for (const f of ['PRIVACY.md', 'landing/privacy.html']) {
       const text = readFileSync(join(root, f), 'utf8');
-      expect(text, f).toContain('christianlo3823@gmail.com');
+      expect(text, f).toContain('chrislo3823@gmail.com');
       expect(text, f).not.toMatch(/PLACEHOLDER|contact@example\.com/);
     }
   });

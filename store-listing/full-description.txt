@@ -32,4 +32,4 @@ SaveShelf for Reddit is an independent tool. It is not affiliated with, endorsed
 
 Open source (AGPL-3.0-or-later). Source code: https://github.com/christianloooo/saveshelf-for-reddit
 
-Questions: christianlo3823@gmail.com
+Questions: chrislo3823@gmail.com

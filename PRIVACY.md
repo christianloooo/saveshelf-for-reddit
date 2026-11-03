@@ -48,7 +48,7 @@ SaveShelf is open source under the AGPL-3.0-or-later, so you can check every cla
 
 ## Contact
 
-Questions or deletion requests: **christianlo3823@gmail.com**
+Questions or deletion requests: **chrislo3823@gmail.com**
 
 _(The extension keeps nothing on a server, so there is nothing for us to delete remotely; this address is for questions.)_
 

@@ -45,7 +45,7 @@ Handling statements to match (for the "how is it used" fields): used only to pro
 3. I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
 ## Privacy policy URL
-**https://saveshelf.surge.sh/privacy.html** (live on Surge, served from `landing/`). The text matches `PRIVACY.md` and the page links its contact address christianlo3823@gmail.com. Paste this URL in the dashboard. It must stay public and match the answers above.
+**https://saveshelf.surge.sh/privacy.html** (live on Surge, served from `landing/`). The text matches `PRIVACY.md` and the page links its contact address chrislo3823@gmail.com. Paste this URL in the dashboard. It must stay public and match the answers above.
 
 ## Homepage / website field
 **https://saveshelf.surge.sh/** (also set as `homepage_url` in `manifest.json`).
